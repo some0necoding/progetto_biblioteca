@@ -10,19 +10,20 @@ CREATE TYPE biblioteca.error AS ENUM (
     'COPIE_ASSOCIATE_A_SEDE',
     'COPIA_IN_PRESTITO',
     'LETTORE_PRESTITI_IN_CORSO',
-    'PRESTITO_IN_RITARDO'
+    'PRESTITO_IN_RITARDO',
+    'LETTORE_GIÀ_REGISTRATO'
 );
 
 -- AUTORE --
 
 CREATE VIEW biblioteca.autoreValido AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.autore
     WHERE autore.isValido = true
 );
 
 CREATE VIEW biblioteca.autoreEliminato AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.autore
     WHERE autore.isValido = false
 );
@@ -42,38 +43,59 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiungiAutore(nome biblioteca.autore.nome
                                                      biografia biblioteca.autore.biografia%TYPE,
                                                      data_di_nascita biblioteca.autore.data_di_nascita%TYPE,
                                                      data_di_morte biblioteca.autore.data_di_morte%TYPE DEFAULT NULL)
-RETURNS biblioteca.autore.id%TYPE
+RETURNS biblioteca.error%TYPE
 AS $$
 DECLARE
-    autore_id biblioteca.autore.id%TYPE;
+    autore biblioteca.autore.id%TYPE;
 BEGIN
-    INSERT INTO biblioteca.autore (nome, cognome, data_di_nascita, data_di_morte, biografia)
-    VALUES (
-        aggiungiAutore.nome, 
-        aggiungiAutore.cognome, 
-        aggiungiAutore.data_di_nascita, 
-        aggiungiAutore.data_di_morte, 
-        aggiungiAutore.biografia
-    )
-    RETURNING id INTO autore_id;
-    RETURN autore_id;
+    SELECT biblioteca.autore.id INTO autore
+    FROM biblioteca.autore
+    WHERE biblioteca.autore.nome = aggiungiAutore.nome AND
+          biblioteca.autore.cognome = aggiungiAutore.cognome;
+
+    IF FOUND THEN
+        IF NOT autore.isValido
+            FROM biblioteca.autore
+            WHERE autore.id = autore
+        THEN
+            UPDATE biblioteca.autore
+            SET autore.isValido = true,
+                autore.biografia = aggiungiAutore.biografia,
+                autore.data_di_nascita = aggiungiAutore.data_di_nascita,
+                autore.data_di_morte = aggiungiAutore.data_di_morte
+            WHERE autore.id = autore;
+        END IF;
+    ELSE
+        INSERT INTO biblioteca.autore (nome, cognome, data_di_nascita, data_di_morte, biografia)
+        VALUES (
+            aggiungiAutore.nome,
+            aggiungiAutore.cognome,
+            aggiungiAutore.data_di_nascita,
+            aggiungiAutore.data_di_morte,
+            aggiungiAutore.biografia
+        );
+    END IF;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
 
 -- Aggiunge la data di morte a un autore
-CREATE OR REPLACE FUNCTION biblioteca.setAutoreDataDiMorte(id biblioteca.autore.id%TYPE, 
 --
 -- @param id l'id dell'autore
 -- @param data_di_morte la data di morte dell'autore
 -- @return 'NESSUN_ERRORE' in ogni caso
+CREATE OR REPLACE FUNCTION biblioteca.setAutoreDataDiMorte(id biblioteca.autore.id%TYPE,
                                                            data_di_morte biblioteca.autore.data_di_morte%TYPE)
-RETURNS void
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     UPDATE biblioteca.autoreValido
     SET autore.data_di_morte = setAutoreDataDiMorte.data_di_morte
     WHERE autore.id = setAutoreDataDiMorte.id;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -84,7 +106,7 @@ LANGUAGE plpgsql;
 -- @param id l'id dell'autore
 -- @return un errore se ci sono libri associati all'autore, altrimenti 'NESSUN_ERRORE'
 CREATE OR REPLACE FUNCTION biblioteca.rimuoviAutore(id biblioteca.autore.id%TYPE)
-RETURNS biblioteca.error
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     IF count(*) > 0
@@ -107,13 +129,13 @@ LANGUAGE plpgsql;
 -- LIBRO --
 
 CREATE VIEW biblioteca.libroValido AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.libro
     WHERE libro.isValido = true
 );
 
 CREATE VIEW biblioteca.libroEliminato AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.libro
     WHERE libro.isValido = false
 );
@@ -132,28 +154,48 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiungiLibro(isbn biblioteca.libro.isbn%T
                                                     titolo biblioteca.libro.titolo%TYPE,
                                                     trama biblioteca.libro.trama%TYPE,
                                                     casa_editrice biblioteca.libro.casa_editrice%TYPE,
-                                                    autore biblioteca.autore.id%TYPE)
-RETURNS biblioteca.libro.isbn%TYPE
+                                                    VARIADIC autore biblioteca.autore.id%TYPE[])
+RETURNS biblioteca.error%TYPE
 AS $$
 DECLARE
     libro biblioteca.libro.isbn%TYPE;
 BEGIN
-    INSERT INTO biblioteca.libro
-    VALUES (
-        aggiungiLibro.isbn,
-        aggiungiLibro.titolo,
-        aggiungiLibro.trama,
-        aggiungiLibro.casa_editrice
-    )
-    RETURNING biblioteca.libro.isbn INTO libro;
+    SELECT biblioteca.libro.isbn INTO libro
+    FROM biblioteca.libro
+    WHERE biblioteca.libro.isbn = aggiungiLibro.isbn;
 
-    INSERT INTO biblioteca.scritto
-    VALUES (
-        aggiungiLibro.autore,
-        aggiungiLibro.isbn
-    );
+    IF FOUND THEN
+        IF NOT libro.isValido
+            FROM biblioteca.libro
+            WHERE libro.isbn = libro
+        THEN
+            UPDATE biblioteca.libro
+            SET libro.isValido = true,
+                libro.titolo = aggiungiLibro.titolo,
+                libro.trama = aggiungiLibro.trama,
+                libro.casa_editrice = aggiungiLibro.casa_editrice
+            WHERE libro.isbn = libro;
+        END IF;
+    ELSE
+        INSERT INTO biblioteca.libro (isbn, titolo, trama, casa_editrice)
+        VALUES (
+            aggiungiLibro.isbn,
+            aggiungiLibro.titolo,
+            aggiungiLibro.trama,
+            aggiungiLibro.casa_editrice
+        );
 
-    RETURN libro;
+        FOREACH autore IN ARRAY aggiungiLibro.autore
+        LOOP
+            INSERT INTO biblioteca.scritto
+            VALUES (
+                autore,
+                libro
+            );
+        END LOOP;
+    END IF;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -163,7 +205,7 @@ LANGUAGE plpgsql;
 -- @param libro l'isbn del libro
 -- @return un errore se ci sono copie associate al libro, altrimenti 'NESSUN_ERRORE'
 CREATE OR REPLACE FUNCTION biblioteca.rimuoviLibro(libro biblioteca.libro.isbn%TYPE)
-RETURNS biblioteca.error
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     IF count(*) > 0
@@ -185,27 +227,26 @@ LANGUAGE plpgsql;
 -- SEDE --
 
 CREATE VIEW biblioteca.sedeOperativa AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.sede
     WHERE sede.isOperativa = true
 );
 
 CREATE VIEW biblioteca.sedeNonOperativa AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.sede
     WHERE sede.isOperativa = false
 );
 
 CREATE VIEW biblioteca.ritardi AS (
-    SELECT sedeOperativa.id AS sede, lettoreRegistrato.codice_fiscale AS lettore, copiaValida.id AS copia 
+    SELECT sedeOperativa.id AS sede, lettoreRegistrato.codice_fiscale AS lettore, copiaValida.id AS copia
     FROM biblioteca.prestitoCorrente
-    JOIN biblioteca.copiaValida       ON prestitoCorrente.copia = copiaValida.id 
-    JOIN biblioteca.sedeOperativa     ON copiaValida.sede = sedeOperativa.id 
-    JOIN biblioteca.lettoreRegistrato ON prestitoCorrente.lettore = lettoreRegistrato.codice_fiscale 
+    JOIN biblioteca.copiaValida       ON prestitoCorrente.copia = copiaValida.id
+    JOIN biblioteca.sedeOperativa     ON copiaValida.sede = sedeOperativa.id
+    JOIN biblioteca.lettoreRegistrato ON prestitoCorrente.lettore = lettoreRegistrato.codice_fiscale
     WHERE prestitoCorrente.scadenza < current_date;
 );
 
-CREATE OR REPLACE FUNCTION biblioteca.aggiungiSede(indirizzo biblioteca.sede.indirizzo%TYPE, 
 -- Aggiunge una sede al database e ne restituisce l'id. Se esiste già una sede
 -- eliminata con lo stesso indirizzo e città, la riabilita; se esiste già una sede
 -- operativa con lo stesso indirizzo e città, non fa nulla.
@@ -213,19 +254,35 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiungiSede(indirizzo biblioteca.sede.ind
 -- @param indirizzo l'indirizzo della sede
 -- @param città la città della sede
 -- @return 'NESSUN_ERRORE' in ogni caso
+CREATE OR REPLACE FUNCTION biblioteca.aggiungiSede(indirizzo biblioteca.sede.indirizzo%TYPE,
                                                    città biblioteca.sede.città%TYPE)
-RETURNS biblioteca.sede.id%TYPE
+RETURNS biblioteca.error%TYPE
 AS $$
 DECLARE
     sede biblioteca.autore.id%TYPE;
 BEGIN
-    INSERT INTO biblioteca.sede (indirizzo, città)
-    VALUES (
-        aggiungiSede.indirizzo,
-        aggiungiSede.città
-    )
-    RETURNING biblioteca.id INTO sede;
-    RETURN sede;
+    SELECT biblioteca.sede.id INTO sede
+    FROM biblioteca.sede
+    WHERE biblioteca.sede.indirizzo ilike aggiungiSede.indirizzo AND
+          biblioteca.sede.città ilike aggiungiSede.città;
+
+    IF FOUND THEN
+        IF NOT sede.isOperativa
+            FROM biblioteca.sede
+            WHERE sede.id = sede
+        THEN
+            UPDATE biblioteca.sede
+            SET sede.isOperativa = true
+            WHERE sede.id = sede;
+    ELSE
+        INSERT INTO biblioteca.sede (indirizzo, città)
+        VALUES
+            aggiungiSede.indirizzo,
+            aggiungiSede.città
+        );
+    END IF;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -277,8 +334,8 @@ DECLARE
     numero_prestiti INTEGER;
 BEGIN
     SELECT count(*) INTO numero_prestiti
-    FROM biblioteca.prestito
-    WHERE prestito.isCorrente AND prestito.sede = getNumeroDiPrestitiInCorso.sede;
+    FROM biblioteca.prestitoCorrente
+    WHERE prestito.sede = getNumeroDiPrestitiInCorso.sede;
     RETURN numero_prestiti;
 $$
 LANGUAGE plpgsql;
@@ -288,7 +345,7 @@ LANGUAGE plpgsql;
 -- @param sede l'id della sede
 -- @return tabella di copie in ritardo con i relativi lettori
 CREATE OR REPLACE FUNCTION biblioteca.getRitardi(sede biblioteca.sede.id%TYPE)
-RETURNS SETOF biblioteca.ritardi%ROWTYPE
+RETURNS SETOF ROW(lettore biblioteca.ritardi.lettore%TYPE, copia biblioteca.ritardi.copia%TYPE)
 AS $$
 DECLARE
 BEGIN
@@ -327,15 +384,21 @@ LANGUAGE plpgsql;
 -- COPIA --
 
 CREATE VIEW biblioteca.copiaValida AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.copia
     WHERE copia.isValida = true
 );
 
 CREATE VIEW biblioteca.copiaEliminata AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.copia
     WHERE copia.isValida = false
+);
+
+CREATE VIEW copiaInPrestito AS (
+    SELECT copia.id as copia, copia.libro, copia.sede
+    FROM biblioteca.copiaValida
+    JOIN biblioteca.prestitoCorrente ON copia.id = prestitoCorrente.copia
 );
 
 CREATE VIEW copiaDisponibile AS (
@@ -345,14 +408,6 @@ CREATE VIEW copiaDisponibile AS (
     SELECT * FROM copiaInPrestito
 );
 
-CREATE VIEW copiaInPrestito AS (
-    SELECT copia.id as copia, copia.libro, copia.sede
-    FROM biblioteca.copiaValida
-    JOIN biblioteca.prestito ON copia.id = prestito.copia
-    WHERE prestito.isCorrente;
-);
-
-CREATE OR REPLACE FUNCTION biblioteca.aggiungiCopia(libro biblioteca.libro.isbn%TYPE, 
 -- Aggiunge una copia al database e ne restituisce l'id. Poichè possono esistere
 -- copie con lo stesso libro e la stessa sede, le copie eliminate non possono essere
 -- riabilitate.
@@ -360,19 +415,18 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiungiCopia(libro biblioteca.libro.isbn%
 -- @param libro l'isbn del libro
 -- @param sede l'id della sede
 -- @return 'NESSUN_ERRORE' in ogni caso
+CREATE OR REPLACE FUNCTION biblioteca.aggiungiCopia(libro biblioteca.libro.isbn%TYPE,
                                                     sede biblioteca.sede.id%TYPE)
-RETURNS biblioteca.copia.id%TYPE
+RETURNS biblioteca.error%TYPE
 AS $$
-DECLARE
-    copia_id biblioteca.copia.id%TYPE;
 BEGIN
     INSERT INTO biblioteca.copia (libro, sede)
     VALUES (
         aggiungiCopia.libro,
         aggiungiCopia.sede
-    )
-    RETURNING id INTO copia_id;
-    RETURN copia_id;
+    );
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -390,7 +444,7 @@ AS $$
 DECLARE
     copiaTrovata biblioteca.copia.id%TYPE;
 BEGIN
-    IF sede IS NULL THEN
+    IF trovaCopiaDisponibile.sede IS NULL THEN
         SELECT copiaDisponibile.id INTO copiaTrovata
         FROM copiaDisponibile
         WHERE copiaDisponibile.libro = trovaCopiaDisponibile.libro;
@@ -405,19 +459,28 @@ END;
 $$
 LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION biblioteca.cambiaSede(copia biblioteca.copia.id%TYPE, 
 -- Assegna una copia a una nuova sede. Se la copia è in prestito, l'operazione fallisce.
 --
 -- @param copia l'id della copia
 -- @param nuovaSede l'id della nuova sede
 -- @return un errore se la copia è in prestito, altrimenti 'NESSUN_ERRORE'
+CREATE OR REPLACE FUNCTION biblioteca.cambiaSede(copia biblioteca.copia.id%TYPE,
                                                  nuovaSede biblioteca.sede.id%TYPE)
 RETURNS void
 AS $$
 BEGIN
+    IF count(*) > 0
+        FROM biblioteca.prestitoCorrente
+        WHERE prestitoCorrente.copia = cambiaSede.copia
+    THEN
+        RETURN 'COPIA_IN_PRESTITO';
+    END IF;
+
     UPDATE biblioteca.copiaValida
     SET copiaValida.sede = cambiaSede.nuovaSede
     WHERE copiaValida.id = cambiaSede.copia;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -427,7 +490,7 @@ LANGUAGE plpgsql;
 -- @param copia l'id della copia
 -- @return un errore se la copia è in prestito, altrimenti 'NESSUN_ERRORE'
 CREATE OR REPLACE FUNCTION biblioteca.rimuoviCopia(copia biblioteca.copia.id%TYPE)
-RETURNS biblioteca.error
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     IF count(*) > 0
@@ -459,35 +522,42 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiungiBibliotecario(email biblioteca.bib
                                                             salt biblioteca.bibliotecario.salt%TYPE)
 RETURNS biblioteca.bibliotecario.id%TYPE;
 AS $$
-DECLARE
-    bibliotecario biblioteca.bibliotecario.id%TYPE;
 BEGIN
     INSERT INTO biblioteca.bibliotecario (email, hash, salt)
     VALUES (
         aggiungiBibliotecario.email,
         aggiungiBibliotecario.hash,
         aggiungiBibliotecario.salt
-    )
-    RETURNING biblioteca.bibliotecario.id INTO bibliotecario;
-    RETURN bibliotecario;
+    );
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION biblioteca.cambiaBibliotecarioEmail(id biblioteca.bibliotecario.id%TYPE, 
-                                                               email biblioteca.bibliotecario.email%TYPE)
-RETURNS void
 -- Cambia l'email di un bibliotecario. L'operazione fallisce se la password non è corretta.
 --
 -- @param id l'id del bibliotecario
 -- @param email la nuova email del bibliotecario
 -- @param hash l'hash della password del bibliotecario
 -- @return un errore se la password non è corretta, altrimenti 'NESSUN_ERRORE'
+CREATE OR REPLACE FUNCTION biblioteca.cambiaBibliotecarioEmail(id biblioteca.bibliotecario.id%TYPE,
+                                                               email biblioteca.bibliotecario.email%TYPE,
+                                                               hash biblioteca.bibliotecario.hash%TYPE)
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
-    UPDATE biblioteca.bibliotecario
-    SET bibliotecario.email = cambiaBibliotecarioEmail.email
-    WHERE bibliotecario.id = cambiaBibliotecarioEmail.id;
+    IF bibliotecario.hash = cambiaBibliotecarioEmail.hash
+        FROM biblioteca.bibliotecario
+        WHERE bibliotecario.id = cambiaBibliotecarioEmail.id
+    THEN
+        UPDATE biblioteca.bibliotecario
+        SET bibliotecario.email = cambiaBibliotecarioEmail.email
+        WHERE bibliotecario.id = cambiaBibliotecarioEmail.id;
+        RETURN 'NESSUN_ERRORE';
+    END IF;
+
+    RETURN 'PASSWORD_ERRATA';
 END;
 $$
 LANGUAGE plpgsql;
@@ -503,10 +573,10 @@ CREATE OR REPLACE FUNCTION biblioteca.cambiaBibliotecarioPassword(id biblioteca.
                                                                   oldHash biblioteca.bibliotecario.hash%TYPE,
                                                                   newHash biblioteca.bibliotecario.hash%TYPE,
                                                                   newSalt biblioteca.bibliotecario.salt%TYPE)
-RETURNS biblioteca.error
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
-    IF bibliotecario.hash = cambiaBibliotecarioPassword.oldHash 
+    IF bibliotecario.hash = cambiaBibliotecarioPassword.oldHash
         FROM biblioteca.bibliotecario
         WHERE bibliotecario.id = cambiaBibliotecarioPassword.id
     THEN
@@ -517,7 +587,7 @@ BEGIN
 
         RETURN 'NESSUN_ERRORE';
     END IF;
-    
+
     RETURN 'PASSWORD_ERRATA';
 END;
 $$
@@ -528,11 +598,13 @@ LANGUAGE plpgsql;
 -- @param id l'id del bibliotecario
 -- @return 'NESSUN_ERRORE' in ogni caso
 CREATE OR REPLACE FUNCTION biblioteca.rimuoviBibliotecario(id biblioteca.bibliotecario.id%TYPE)
-RETURNS void
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     DELETE FROM biblioteca.bibliotecario
     WHERE bibliotecario.id = rimuoviBibliotecario.id;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -540,13 +612,13 @@ LANGUAGE plpgsql;
 -- LETTORE --
 
 CREATE VIEW biblioteca.lettoreRegistrato AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.lettore
     WHERE lettore.isRegistrato = true
 );
 
 CREATE VIEW biblioteca.lettoreNonRegistrato AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.lettore
     WHERE lettore.isRegistrato = false
 );
@@ -572,11 +644,35 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiungiLettore(codice_fiscale biblioteca.
                                                       hash biblioteca.lettore.hash%TYPE,
                                                       salt biblioteca.lettore.salt%TYPE,
                                                       categoria biblioteca.lettore.categoria%TYPE)
-RETURNS biblioteca.lettore.codice_fiscale%TYPE
+RETURNS biblioteca.error%TYPE
 AS $$
 DECLARE
-    codice_fiscale biblioteca.lettore.codice_fiscale%TYPE; 
+    codice_fiscale biblioteca.lettore.codice_fiscale%TYPE;
 BEGIN
+    SELECT biblioteca.lettore.codice_fiscale INTO codice_fiscale
+    FROM biblioteca.lettore
+    WHERE biblioteca.lettore.codice_fiscale = aggiungiLettore.codice_fiscale;
+
+    IF FOUND
+    THEN
+        IF biblioteca.lettore.isRegistrato
+            FROM biblioteca.lettore
+            WHERE biblioteca.lettore.codice_fiscale = codice_fiscale
+        THEN
+            RETURN 'LETTORE_GIÀ_REGISTRATO';
+        END IF;
+
+        UPDATE biblioteca.lettoreNonRegistrato
+        SET lettoreNonRegistrato.isRegistrato = true,
+            lettoreNonRegistrato.nome = aggiungiLettore.nome,
+            lettoreNonRegistrato.cognome = aggiungiLettore.cognome,
+            lettoreNonRegistrato.email = aggiungiLettore.email,
+            lettoreNonRegistrato.categoria = aggiungiLettore.categoria
+        WHERE lettoreNonRegistrato.codice_fiscale = codice_fiscale;
+
+        RETURN 'NESSUN_ERRORE';
+    END IF;
+
     INSERT INTO biblioteca.lettore
     VALUES (
         aggiungiLettore.codice_fiscale,
@@ -586,9 +682,9 @@ BEGIN
         aggiungiLettore.hash,
         aggiungiLettore.salt,
         aggiungiLettore.categoria
-    )
-    RETURNING biblioteca.lettore.codice_fiscale INTO codice_fiscale;
-    RETURN codice_fiscale;
+    );
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -600,13 +696,22 @@ LANGUAGE plpgsql;
 -- @param hash l'hash della password del lettore
 -- @return un errore se la password non è corretta, altrimenti 'NESSUN_ERRORE'
 CREATE OR REPLACE FUNCTION biblioteca.cambiaLettoreEmail(codice_fiscale biblioteca.lettore.codice_fiscale%TYPE,
-                                                         email biblioteca.lettore.email%TYPE)
-RETURNS void
+                                                         email biblioteca.lettore.email%TYPE,
+                                                         hash biblioteca.lettore.hash%TYPE)
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
-    UPDATE biblioteca.lettoreRegistrato
-    SET lettoreRegistrato.email = cambiaLettoreEmail.email
-    WHERE lettoreRegistrato.codice_fiscale = cambiaLettoreEmail.codice_fiscale;
+    IF lettoreRegistrato.hash = cambiaLettoreEmail.hash
+        FROM biblioteca.lettoreRegistrato
+        WHERE lettoreRegistrato.codice_fiscale = cambiaLettoreEmail.codice_fiscale
+    THEN
+        UPDATE biblioteca.lettoreRegistrato
+        SET lettoreRegistrato.email = cambiaLettoreEmail.email
+        WHERE lettoreRegistrato.codice_fiscale = cambiaLettoreEmail.codice_fiscale;
+        RETURN 'NESSUN_ERRORE';
+    END IF;
+
+    RETURN 'PASSWORD_ERRATA';
 END;
 $$
 LANGUAGE plpgsql;
@@ -622,7 +727,7 @@ CREATE OR REPLACE FUNCTION biblioteca.cambiaLettorePassword(codice_fiscale bibli
                                                             oldHash biblioteca.lettore.hash%TYPE,
                                                             newHash biblioteca.lettore.hash%TYPE,
                                                             newSalt biblioteca.lettore.salt%TYPE)
-RETURNS biblioteca.error
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     IF lettoreRegistrato.hash = cambiaLettorePassword.oldHash
@@ -649,31 +754,37 @@ LANGUAGE plpgsql;
 -- @return 'NESSUN_ERRORE' in ogni caso
 CREATE OR REPLACE FUNCTION biblioteca.cambiaLettoreCategoria(codice_fiscale biblioteca.lettore.codice_fiscale%TYPE,
                                                              categoria biblioteca.lettore.categoria%TYPE)
-RETURNS void
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     UPDATE biblioteca.lettoreRegistrato
     SET lettoreRegistrato.categoria = cambiaLettoreCategoria.categoria
     WHERE lettoreRegistrato.codice_fiscale = cambiaLettoreCategoria.codice_fiscale;
+
+    RETURN 'NESSUN_ERRORE';
 END;
+$$
+LANGUAGE plpgsql;
 
 -- Azzera il numero di ritardi di un lettore.
 --
 -- @param codice_fiscale il codice fiscale del lettore
 -- @return 'NESSUN_ERRORE' in ogni caso
 CREATE OR REPLACE FUNCTION biblioteca.resetRitardi(codice_fiscale biblioteca.lettore.codice_fiscale%TYPE)
-RETURNS void
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     UPDATE biblioteca.lettoreRegistrato
     SET lettoreRegistrato.ritardi = 0
     WHERE lettoreRegistrato.codice_fiscale = resetRitardi.codice_fiscale;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION biblioteca.rimuoviLettore(codice_fiscale biblioteca.lettore.codice_fiscale%TYPE)
-RETURNS biblioteca.error
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     IF count(*) > 0
@@ -695,13 +806,13 @@ LANGUAGE plpgsql;
 -- PRESTITO --
 
 CREATE VIEW biblioteca.prestitoCorrente AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.prestito
     WHERE prestito.isCorrente = true
 );
 
 CREATE VIEW biblioteca.prestitoPassato AS (
-    SELECT * 
+    SELECT *
     FROM biblioteca.prestito
     WHERE prestito.isCorrente = false
 );
@@ -719,7 +830,7 @@ CREATE VIEW biblioteca.prestitoPassato AS (
 --         'NESSUN_ERRORE' altrimenti
 CREATE OR REPLACE FUNCTION biblioteca.richiediPrestito(copia biblioteca.copia.id%TYPE,
                                                        lettore biblioteca.lettore.codice_fiscale%TYPE)
-RETURNS biblioteca.error
+RETURNS biblioteca.error%TYPE
 AS $$
 DECLARE
     max_prestiti INTEGER;
@@ -765,7 +876,7 @@ BEGIN
     );
 
     RETURN 'NESSUN_ERRORE';
-END; 
+END;
 $$
 LANGUAGE plpgsql;
 
@@ -774,13 +885,15 @@ LANGUAGE plpgsql;
 -- @param copia l'id della copia
 -- @return 'NESSUN_ERRORE' in ogni caso
 CREATE OR REPLACE FUNCTION biblioteca.restituisciPrestito(copia biblioteca.copia.id%TYPE)
-RETURNS void
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     UPDATE biblioteca.prestitoCorrente
     SET prestitoCorrente.isCorrente = false,
         prestitoCorrente.fine = current_date
     WHERE prestitoCorrente.copia = copia;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -789,7 +902,7 @@ LANGUAGE plpgsql;
 -- @return 'PRESTITO_IN_RITARDO' se il prestito è in ritardo, 'NESSUN_ERRORE' altrimenti
 CREATE OR REPLACE FUNCTION biblioteca.prorogaPrestito(copia biblioteca.copia.id%TYPE,
                                                       giorniDiProroga INTEGER)
-RETURNS biblioteca.error
+RETURNS biblioteca.error%TYPE
 AS $$
 BEGIN
     IF count(*) = 0

@@ -29,7 +29,7 @@ CREATE TABLE biblioteca.libro (
 );
 ```
 ### Funzioni associate
- - `aggiungiLibro(isbn, titolo, trama, casa editrice, id autore)`
+ - `aggiungiLibro(isbn, titolo, trama, casa editrice, autori[])`
  - `rimuoviLibro(isbn)`: setta `isValido = false`. Nessun libro viene mai elminato affinchè lo storico dei prestiti possa rimanere sempre consultabile. L'operazione fallisce se ci sono copie valide associate.
 
 ## Sede
@@ -47,7 +47,7 @@ CREATE TABLE biblioteca.sede (
  - `getNumeroIsbnGestiti(id)`
  - `getNumeroPrestitiInCorso(id)`
  - `getRitardi(id)`: genera un report dei ritardi
- - `rimuoviSede(id):` setta `isOperativa = false`. Nessuna sede viene mai eliminata affinchè lo storico dei prestiti possa rimanere sempre consultabile. L'operazione fallisce se ci sono copie associate.
+ - `rimuoviSede(id):` setta `isOperativa = false`. Nessuna sede viene mai eliminata affinchè lo storico dei prestiti possa rimanere sempre consultabile. L'operazione fallisce se ci sono copie valide associate.
 
 ## Copia
 ```
@@ -61,7 +61,7 @@ CREATE TABLE biblioteca.copia (
 ### Funzioni associate
  - `aggiungiCopia(isbn, sede)`
  - `trovaCopiaDisponibile(libro, sede)`: restituisce una copia disponibile di un libro in un data sede (opzionale).
- - `cambiaSede(id, sede)`: assegna una copia ad un'altra sede.
+ - `cambiaSede(id, sede)`: assegna una copia ad un'altra sede. Se la copia è in prestito l'operazione fallisce.
  - `rimuoviCopia(id)`: setta `isValida = false`. Nessuna copia viene mai elminata affinchè lo storico dei prestiti possa rimanere sempre consultabile. L'operazione fallisce se la copia è in prestito.
 
 ## Bibliotecario
@@ -95,10 +95,10 @@ CREATE TABLE biblioteca.lettore (
 ```
 ### Funzioni associate
  - `aggiungiLettore(nome, cognome, hash, salt, email, categoria, codice fiscale)`
- - `resetRitardi(codice_fiscale)`
- - `cambiaCategoria(codice_fiscale, categoria)`
  - `cambiaLettoreEmail(codice_fiscale, email)`
  - `cambiaLettorePassword(codice_fiscale, oldHash, newHash, newSalt)`
+ - `cambiaCategoria(codice_fiscale, categoria)`
+ - `resetRitardi(codice_fiscale)`
  - `rimuoviLettore(codice_fiscale)`: setta `isRegistrato = false`. Nessun lettore viene mai elminato affinchè lo storico dei prestiti possa rimanere sempre consultabile. L'operazione fallisce se il lettore ha un prestito in corso.
 
 ## Prestito

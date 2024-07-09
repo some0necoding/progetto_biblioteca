@@ -1,3 +1,5 @@
+DROP SCHEMA IF EXISTS biblioteca CASCADE;
+
 CREATE SCHEMA biblioteca;
 
 CREATE TABLE biblioteca.autore (
@@ -47,8 +49,7 @@ CHECK (
 CREATE TABLE biblioteca.bibliotecario (
     id SERIAL PRIMARY KEY,
     email biblioteca.email UNIQUE NOT NULL,
-    hash CHAR(64) NOT NULL,
-    salt CHAR(8) NOT NULL
+    hash VARCHAR(255) NOT NULL
 );
 
 CREATE DOMAIN biblioteca.categoria AS VARCHAR(8)
@@ -67,8 +68,7 @@ CREATE TABLE biblioteca.lettore (
     nome VARCHAR(64) NOT NULL,
     cognome VARCHAR(64) NOT NULL,
     email biblioteca.email UNIQUE NOT NULL,
-    hash CHAR(64) NOT NULL,
-    salt CHAR(8) NOT NULL,
+    hash VARCHAR(255) NOT NULL,
     categoria biblioteca.categoria NOT NULL,
     ritardi INTEGER NOT NULL,
     isRegistrato BOOLEAN NOT NULL DEFAULT true

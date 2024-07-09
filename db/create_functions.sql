@@ -542,19 +542,16 @@ LANGUAGE plpgsql;
 --
 -- @param email l'email del bibliotecario
 -- @param hash l'hash della password del bibliotecario
--- @param salt il salt della password del bibliotecario
 -- @return 'NESSUN_ERRORE' in ogni caso
 CREATE OR REPLACE FUNCTION biblioteca.aggiungiBibliotecario(email biblioteca.bibliotecario.email%TYPE,
-                                                            hash biblioteca.bibliotecario.hash%TYPE,
-                                                            salt biblioteca.bibliotecario.salt%TYPE)
+                                                            hash biblioteca.bibliotecario.hash%TYPE)
 RETURNS biblioteca.error
 AS $$
 BEGIN
-    INSERT INTO biblioteca.bibliotecario (email, hash, salt)
+    INSERT INTO biblioteca.bibliotecario (email, hash)
     VALUES (
         aggiungiBibliotecario.email,
-        aggiungiBibliotecario.hash,
-        aggiungiBibliotecario.salt
+        aggiungiBibliotecario.hash
     );
 
     RETURN 'NESSUN_ERRORE';
@@ -567,24 +564,16 @@ LANGUAGE plpgsql;
 -- @param id l'id del bibliotecario
 -- @param email la nuova email del bibliotecario
 -- @param hash l'hash della password del bibliotecario
--- @return un errore se la password non è corretta, altrimenti 'NESSUN_ERRORE'
+-- @return 'NESSUN_ERRORE' in ogni caso
 CREATE OR REPLACE FUNCTION biblioteca.cambiaBibliotecarioEmail(id biblioteca.bibliotecario.id%TYPE,
-                                                               email biblioteca.bibliotecario.email%TYPE,
-                                                               hash biblioteca.bibliotecario.hash%TYPE)
+                                                               email biblioteca.bibliotecario.email%TYPE)
 RETURNS biblioteca.error
 AS $$
 BEGIN
-    IF bibliotecario.hash = cambiaBibliotecarioEmail.hash
-        FROM biblioteca.bibliotecario
-        WHERE bibliotecario.id = cambiaBibliotecarioEmail.id
-    THEN
-        UPDATE biblioteca.bibliotecario
-        SET bibliotecario.email = cambiaBibliotecarioEmail.email
-        WHERE bibliotecario.id = cambiaBibliotecarioEmail.id;
-        RETURN 'NESSUN_ERRORE';
-    END IF;
-
-    RETURN 'PASSWORD_ERRATA';
+    UPDATE biblioteca.bibliotecario
+    SET bibliotecario.email = cambiaBibliotecarioEmail.email
+    WHERE bibliotecario.id = cambiaBibliotecarioEmail.id;
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -592,30 +581,17 @@ LANGUAGE plpgsql;
 -- Cambia la password di un bibliotecario. Se la vecchia password non è corretta, l'operazione fallisce.
 --
 -- @param id l'id del bibliotecario
--- @param oldHash l'hash della vecchia password del bibliotecario
 -- @param newHash l'hash della nuova password del bibliotecario
--- @param newSalt il salt della nuova password del bibliotecario
--- @return un errore se la vecchia password non è corretta, altrimenti 'NESSUN_ERRORE'
+-- @return 'NESSUN_ERRORE' in ogni caso
 CREATE OR REPLACE FUNCTION biblioteca.cambiaBibliotecarioPassword(id biblioteca.bibliotecario.id%TYPE,
-                                                                  oldHash biblioteca.bibliotecario.hash%TYPE,
-                                                                  newHash biblioteca.bibliotecario.hash%TYPE,
-                                                                  newSalt biblioteca.bibliotecario.salt%TYPE)
+                                                                  newHash biblioteca.bibliotecario.hash%TYPE)
 RETURNS biblioteca.error
 AS $$
 BEGIN
-    IF bibliotecario.hash = cambiaBibliotecarioPassword.oldHash
-        FROM biblioteca.bibliotecario
-        WHERE bibliotecario.id = cambiaBibliotecarioPassword.id
-    THEN
-        UPDATE biblioteca.bibliotecario
-        SET bibliotecario.hash = cambiaBibliotecarioPassword.newHash,
-            bibliotecario.salt = cambiaBibliotecarioPassword.newSalt
-        WHERE bibliotecario.id = cambiaBibliotecarioPassword.id;
-
-        RETURN 'NESSUN_ERRORE';
-    END IF;
-
-    RETURN 'PASSWORD_ERRATA';
+    UPDATE biblioteca.bibliotecario
+    SET bibliotecario.hash = cambiaBibliotecarioPassword.newHash
+    WHERE bibliotecario.id = cambiaBibliotecarioPassword.id;
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -648,7 +624,6 @@ LANGUAGE plpgsql;
 -- @param cognome il cognome del lettore
 -- @param email l'email del lettore
 -- @param hash l'hash della password del lettore
--- @param salt il salt della password del lettore
 -- @param categoria la categoria del lettore
 -- @return 'LETTORE_GIÀ_REGISTRATO' se il lettore è già registrato,
 --         'NESSUN_ERRORE' altrimenti
@@ -657,7 +632,6 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiungiLettore(codice_fiscale biblioteca.
                                                       cognome biblioteca.lettore.cognome%TYPE,
                                                       email biblioteca.lettore.email%TYPE,
                                                       hash biblioteca.lettore.hash%TYPE,
-                                                      salt biblioteca.lettore.salt%TYPE,
                                                       categoria biblioteca.lettore.categoria%TYPE)
 RETURNS biblioteca.error
 AS $$
@@ -695,7 +669,6 @@ BEGIN
         aggiungiLettore.cognome,
         aggiungiLettore.email,
         aggiungiLettore.hash,
-        aggiungiLettore.salt,
         aggiungiLettore.categoria
     );
 
@@ -709,24 +682,16 @@ LANGUAGE plpgsql;
 -- @param codice_fiscale il codice fiscale del lettore
 -- @param email la nuova email del lettore
 -- @param hash l'hash della password del lettore
--- @return un errore se la password non è corretta, altrimenti 'NESSUN_ERRORE'
+-- @return 'NESSUN_ERRORE' in ogni caso
 CREATE OR REPLACE FUNCTION biblioteca.cambiaLettoreEmail(codice_fiscale biblioteca.lettore.codice_fiscale%TYPE,
-                                                         email biblioteca.lettore.email%TYPE,
-                                                         hash biblioteca.lettore.hash%TYPE)
+                                                         email biblioteca.lettore.email%TYPE)
 RETURNS biblioteca.error
 AS $$
 BEGIN
-    IF lettoreRegistrato.hash = cambiaLettoreEmail.hash
-        FROM biblioteca.lettoreRegistrato
-        WHERE lettoreRegistrato.codice_fiscale = cambiaLettoreEmail.codice_fiscale
-    THEN
-        UPDATE biblioteca.lettoreRegistrato
-        SET lettoreRegistrato.email = cambiaLettoreEmail.email
-        WHERE lettoreRegistrato.codice_fiscale = cambiaLettoreEmail.codice_fiscale;
-        RETURN 'NESSUN_ERRORE';
-    END IF;
-
-    RETURN 'PASSWORD_ERRATA';
+    UPDATE biblioteca.lettoreRegistrato
+    SET lettoreRegistrato.email = cambiaLettoreEmail.email
+    WHERE lettoreRegistrato.codice_fiscale = cambiaLettoreEmail.codice_fiscale;
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -734,30 +699,18 @@ LANGUAGE plpgsql;
 -- Cambia la password di un lettore. Se la vecchia password non è corretta, l'operazione fallisce.
 --
 -- @param codice_fiscale il codice fiscale del lettore
--- @param oldHash l'hash della vecchia password del lettore
 -- @param newHash l'hash della nuova password del lettore
--- @param newSalt il salt della nuova password del lettore
 -- @return un errore se la vecchia password non è corretta, altrimenti 'NESSUN_ERRORE'
 CREATE OR REPLACE FUNCTION biblioteca.cambiaLettorePassword(codice_fiscale biblioteca.lettore.codice_fiscale%TYPE,
-                                                            oldHash biblioteca.lettore.hash%TYPE,
-                                                            newHash biblioteca.lettore.hash%TYPE,
-                                                            newSalt biblioteca.lettore.salt%TYPE)
+                                                            newHash biblioteca.lettore.hash%TYPE)
 RETURNS biblioteca.error
 AS $$
 BEGIN
-    IF lettoreRegistrato.hash = cambiaLettorePassword.oldHash
-        FROM biblioteca.lettoreRegistrato
-        WHERE lettoreRegistrato.codice_fiscale = cambiaLettorePassword.codice_fiscale
-    THEN
-        UPDATE biblioteca.lettoreRegistrato
-        SET lettoreRegistrato.hash = cambiaLettorePassword.newHash,
-            lettoreRegistrato.salt = cambiaLettorePassword.newSalt
-        WHERE lettoreRegistrato.codice_fiscale = cambiaLettorePassword.codice_fiscale;
+    UPDATE biblioteca.lettoreRegistrato
+    SET lettoreRegistrato.hash = cambiaLettorePassword.newHash
+    WHERE lettoreRegistrato.codice_fiscale = cambiaLettorePassword.codice_fiscale;
 
-        RETURN 'NESSUN_ERRORE';
-    END IF;
-
-    RETURN 'PASSWORD_ERRATA';
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -798,6 +751,11 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- Rimuove un lettore dal database. Se il lettore ha prestiti in corso, l'operazione fallisce.
+--
+-- @param codice_fiscale il codice fiscale del lettore
+-- @return 'LETTORE_PRESTITI_IN_CORSO' se il lettore ha prestiti in corso,
+--         'NESSUN_ERRORE' altrimenti
 CREATE OR REPLACE FUNCTION biblioteca.rimuoviLettore(codice_fiscale biblioteca.lettore.codice_fiscale%TYPE)
 RETURNS biblioteca.error
 AS $$
@@ -901,7 +859,8 @@ $$
 LANGUAGE plpgsql;
 
 -- Proroga del numero di giorni specificato un prestito corrente se non è già in ritardo.
--- @return 'PRESTITO_IN_RITARDO' se il prestito è in ritardo, 'NESSUN_ERRORE' altrimenti
+-- @return 'PRESTITO_IN_RITARDO' se il prestito è in ritardo,
+--         'NESSUN_ERRORE' altrimenti
 CREATE OR REPLACE FUNCTION biblioteca.prorogaPrestito(copia biblioteca.copia.id%TYPE,
                                                       giorniDiProroga INTEGER)
 RETURNS biblioteca.error
@@ -924,7 +883,7 @@ LANGUAGE plpgsql;
 
 -- Trigger. Se un prestito è in ritardo, incrementa il contatore dei ritardi del lettore.
 -- @return NULL
-CREATE OR REPLACE FUNCTION aggiornaRitardi()
+CREATE OR REPLACE FUNCTION biblioteca.aggiornaRitardi()
 RETURNS trigger
 AS $$
 BEGIN

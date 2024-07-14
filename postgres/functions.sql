@@ -451,8 +451,6 @@ END;
 $$
 LANGUAGE plpgsql;
 
--- TODO: triggers
-
 -- Trigger Function. Incrementa il numero di copie e (se necessario) di libri
 -- gestiti dalla sede.
 -- 
@@ -649,18 +647,51 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- Restituisce il lettore con l'email specificata.
+--
+-- @param email l'email del lettore
+-- @return il lettore con l'email specificata
+CREATE OR REPLACE FUNCTION biblioteca.getLettoreByEmail(email biblioteca.lettore.email%TYPE)
+RETURNS biblioteca.lettore
+AS $$
+DECLARE
+    lettoreTrovato biblioteca.lettore%ROWTYPE;
+BEGIN
+    SELECT * INTO lettoreTrovato
+    FROM biblioteca.lettore
+    WHERE lettore.email = getLettoreByEmail.email;
+
+    RETURN lettoreTrovato;
+END;
+$$
+LANGUAGE plpgsql;
+
 -- Cambia l'email di un lettore.
 --
 -- @param codice_fiscale il codice fiscale del lettore
 -- @param email la nuova email del lettore
+-- @return 'LETTORE_GIÀ_REGISTRATO' se esiste già un lettore registrato con la mail specificata,
+--         'NESSUN_ERRORE' altrimenti
 CREATE OR REPLACE FUNCTION biblioteca.setLettoreEmail(codice_fiscale biblioteca.lettore.codice_fiscale%TYPE,
                                                       email biblioteca.lettore.email%TYPE)
-RETURNS void
+RETURNS biblioteca.error
 AS $$
+DECLARE
+    codice_fiscale biblioteca.lettore.codice_fiscale%TYPE;
 BEGIN
+    SELECT lettore.codice_fiscale INTO codice_fiscale
+    FROM biblioteca.lettore
+    WHERE lettore.email = setLettoreEmail.email;
+
+    IF FOUND THEN
+        RETURN 'LETTORE_GIÀ_REGISTRATO';
+    END IF;
+
     UPDATE biblioteca.lettore
     SET email = setLettoreEmail.email
     WHERE lettore.codice_fiscale = setLettoreEmail.codice_fiscale;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -1101,18 +1132,48 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- Restituisce il bibliotecario con la mail specificata.
+--
+-- @param email l'email del bibliotecario
+-- @return il bibliotecario con la mail specificata
+CREATE OR REPLACE FUNCTION biblioteca.getBibliotecarioByEmail(email biblioteca.bibliotecario.email%TYPE)
+RETURNS biblioteca.bibliotecario
+AS $$
+DECLARE
+    bibliotecarioTrovato biblioteca.bibliotecario%ROWTYPE;
+BEGIN
+    SELECT * INTO bibliotecarioTrovato
+    FROM biblioteca.bibliotecario
+    WHERE bibliotecario.email = getBibliotecarioByEmail.email;
+
+    RETURN bibliotecarioTrovato;
+END;
+$$
+LANGUAGE plpgsql;
+
 -- Cambia l'email di un bibliotecario.
 --
 -- @param id l'id del bibliotecario
 -- @param email la nuova email del bibliotecario
+-- @return 'BIBLIOTECARIO_GIÀ_REGISTRATO' se esiste già un bibliotecario registrato con la mail specificata,
+--         'NESSUN_ERRORE' altrimenti
 CREATE OR REPLACE FUNCTION biblioteca.setBibliotecarioEmail(id biblioteca.bibliotecario.id%TYPE,
                                                             email biblioteca.bibliotecario.email%TYPE)
-RETURNS void
+RETURNS biblioteca.error
 AS $$
 BEGIN
+    IF count(*) > 0
+        FROM biblioteca.bibliotecario
+        WHERE bibliotecario.email = setBibliotecarioEmail.email
+    THEN
+        RETURN 'BIBLIOTECARIO_GIÀ_REGISTRATO';
+    END IF;
+
     UPDATE biblioteca.bibliotecario
     SET email = setBibliotecarioEmail.email
     WHERE bibliotecario.id = setBibliotecarioEmail.id;
+
+    RETURN 'NESSUN_ERRORE';
 END;
 $$
 LANGUAGE plpgsql;
@@ -1122,7 +1183,7 @@ LANGUAGE plpgsql;
 -- @param id l'id del bibliotecario
 -- @param newHash l'hash della nuova password del bibliotecario
 CREATE OR REPLACE FUNCTION biblioteca.setBibliotecarioPassword(id biblioteca.bibliotecario.id%TYPE,
-                                                                  newHash biblioteca.bibliotecario.hash%TYPE)
+                                                               newHash biblioteca.bibliotecario.hash%TYPE)
 RETURNS void
 AS $$
 BEGIN

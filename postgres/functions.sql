@@ -905,10 +905,12 @@ BEGIN
     DELETE FROM biblioteca.prestito
     WHERE prestito.copia = restituisciPrestito.copia;
 
-    INSERT INTO biblioteca.restituzione
-    VALUES (
-        restituisciPrestito.copia
-    );
+    IF FOUND THEN
+        INSERT INTO biblioteca.restituzione
+        VALUES (
+            restituisciPrestito.copia
+        );
+    END IF;
 END;
 $$
 LANGUAGE plpgsql;

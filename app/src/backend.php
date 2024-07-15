@@ -10,36 +10,6 @@
 
     define('HASHING_ALGORITHM', PASSWORD_DEFAULT);
 
-    // TODO: spostare questo enum nel futuro file delle operazioni
-    // Per consentire ad una pagina di gestire varie operazioni che richiedono
-    // l'invio di dati tramite POST, si può utilizzare un enum per identificare
-    // le varie operazioni.
-    enum Operazione: int {
-        case AGGIUNGI_AUTORE = 1;
-        case SET_DATA_DI_MORTE_AUTORE = 2;
-        case RIMUOVI_AUTORE = 3;
-        case AGGIUNGI_LIBRO = 4;
-        case RIMUOVI_LIBRO = 5;
-        case AGGIUNGI_SEDE = 6;
-        case RIMUOVI_SEDE = 7;
-        case AGGIUNGI_COPIA = 8;
-        case CAMBIA_SEDE = 9;
-        case RIMUOVI_COPIA = 10;
-        case AGGIUNGI_BIBLIOTECARIO = 11;
-        case CAMBIA_EMAIL_BIBLIOTECARIO = 12;
-        case CAMBIA_PASSWORD_BIBLIOTECARIO = 13;
-        case RIMUOVI_BIBLIOTECARIO = 14;
-        case AGGIUNGI_LETTORE = 15;
-        case CAMBIA_EMAIL_LETTORE = 16;
-        case CAMBIA_PASSWORD_LETTORE = 17;
-        case CAMBIA_CATEGORIA_LETTORE = 18;
-        case AZZERA_RITARDI_LETTORE = 19;
-        case RIMUOVI_LETTORE = 20;
-        case RICHIEDI_PRESTITO = 21;
-        case RESTITUISCI_PRESTITO = 22;
-        case PROROGA_PRESTITO = 23;
-    }
-
     /**
      * Aggiunge un autore al database.
      *

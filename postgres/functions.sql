@@ -1043,16 +1043,16 @@ BEGIN
     WHERE copia.id = NEW.copia;
 
     UPDATE biblioteca.copia
-    SET disponibile = false
+    SET isDisponibile = false
     WHERE copia.id = NEW.copia;
 
     IF count(*) = 1 -- la copia è l'unica disponibile per quel libro
         FROM biblioteca.copia
         WHERE copia.libro = libroAssociato AND
-              copia.disponibile
+              copia.isDisponibile
     THEN
         UPDATE biblioteca.libro
-        SET disponibile = false
+        SET isDisponibile = false
         WHERE libro.isbn = libroAssociato;
     END IF;
 
@@ -1081,16 +1081,16 @@ BEGIN
     WHERE copia.id = OLD.copia;
 
     UPDATE biblioteca.copia
-    SET disponibile = true
+    SET isDisponibile = true
     WHERE copia.id = OLD.copia;
 
     IF count(*) = 0 -- non ci sono altre copie disponibili per quel libro
         FROM biblioteca.copia
         WHERE copia.libro = libroAssociato AND
-              copia.disponibile
+              copia.isDisponibile
     THEN
         UPDATE biblioteca.libro
-        SET disponibile = true
+        SET isDisponibile = true
         WHERE libro.isbn = libroAssociato;
     END IF;
 

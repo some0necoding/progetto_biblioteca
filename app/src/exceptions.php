@@ -1,5 +1,23 @@
 <?php
 
+    class InvalidIsbnException extends Exception {
+        public function __construct(string $isbn) {
+            parent::__construct($isbn . " non è un codice isbn valido");
+        }
+    }
+
+    class InvalidEmailException extends Exception {
+        public function __construct(string $email) {
+            parent::__construct($email . " non è una mail valida");
+        }
+    }
+
+    class InvalidCodiceFiscaleException extends Exception {
+        public function __construct(string $codiceFiscale) {
+            parent::__construct($codiceFiscale . " non è un codice fiscale valido");
+        }
+    }
+
     // exceptions riguardanti il database
 
     class DatabaseException extends Exception {

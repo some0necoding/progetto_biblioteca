@@ -7,7 +7,7 @@
 
         public function __construct(string $isbn) {
             if (!preg_match('/' . PATTERN . '/', $isbn))
-                throw new InvalidArgumentException($isbn . " non è un codice isbn valido");
+                throw new InvalidIsbnException($isbn);
             $this->isbn = $isbn;
         }
 
@@ -28,7 +28,7 @@
 
         public function __construct(string $email) {
             if (!preg_match('/' . PATTERN . '/', $email))
-                throw new InvalidArgumentException($email . " non è una mail valida");
+                throw new InvalidEmailException($email);
             $this->email = $email;
         }
 
@@ -68,7 +68,7 @@
 
         public function __construct(string $codice_fiscale) {
             if (!preg_match('/' . PATTERN . '/i', $codice_fiscale))
-                throw new InvalidArgumentException($codice_fiscale . " non è un codice fiscale valido");
+                throw new InvalidCodiceFiscalException($codice_fiscale);
             $this->codice_fiscale = $codice_fiscale;
         }
 

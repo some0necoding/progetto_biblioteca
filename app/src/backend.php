@@ -66,17 +66,11 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        [$error] = pg_fetch_row($result);
-
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
 
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
-
-        $error = DatabaseErrors::fromEnumString($error);
-        if (!is_null($error))
-            throw $error;
     }
 
     /**
@@ -1077,17 +1071,11 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        [$error] = pg_fetch_row($result);
-
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
 
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
-
-        $error = DatabaseException::fromEnumString($error);
-        if (!is_null($error))
-            throw $error;
     }
 
     /**

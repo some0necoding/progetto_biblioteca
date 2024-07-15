@@ -2,7 +2,7 @@
     include_once 'exceptions.php';
     include_once 'objects.php';
 
-    define('DB_HOST', 'localhost'); 
+    define('DB_HOST', 'localhost');
     define('DB_PORT', '5432');
     define('DB_NAME', 'biblioteca');
     define('DB_USER', 'marco');
@@ -189,7 +189,7 @@
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
 
-        $error = DatabaseErrors::fromEnumString($error);
+        $error = DatabaseException::fromEnumString($error);
         if (!is_null($error))
             throw $error;
     }
@@ -229,7 +229,7 @@
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
 
-        $error = DatabaseErrors::fromEnumString($error);
+        $error = DatabaseException::fromEnumString($error);
         if (!is_null($error))
             throw $error;
     }
@@ -323,7 +323,7 @@
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
 
-        $error = DatabaseErrors::fromEnumString($error);
+        $error = DatabaseException::fromEnumString($error);
         if (!is_null($error))
             throw $error;
     }
@@ -381,7 +381,7 @@
 
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
-        
+
         return $sedi;
     }
 
@@ -412,7 +412,7 @@
 
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
-        
+
         return $sede;
     }
 
@@ -444,7 +444,7 @@
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
 
-        return $ritardi; 
+        return $ritardi;
     }
 
     /**
@@ -475,7 +475,7 @@
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
 
-        $error = DatabaseErrors::fromEnumString($error);
+        $error = DatabaseException::fromEnumString($error);
         if (!is_null($error))
             throw $error;
     }
@@ -589,7 +589,7 @@
             throw new ErroreInternoDatabaseException();
 
         $copie = pg_fetch_all($result);
-        
+
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
 
@@ -628,7 +628,7 @@
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
 
-        $error = DatabaseError::fromEnumString($error);
+        $error = DatabaseException::fromEnumString($error);
         if (!is_null($error))
             throw $error;
     }
@@ -660,7 +660,7 @@
 
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
-        $error = DatabaseError::fromEnumString($error);
+        $error = DatabaseException::fromEnumString($error);
         if (!is_null($error))
             throw $error;
     }
@@ -701,7 +701,7 @@
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
 
-        $error = DatabaseError::fromEnumString($error); 
+        $error = DatabaseException::fromEnumString($error);
         if (!is_null($error))
             throw $error;
     }
@@ -1033,7 +1033,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getPrestitoByCopia($1)"; 
+        $query = "SELECT biblioteca.getPrestitoByCopia($1)";
         if (!pg_prepare($conn, "get_prestito_by_copia", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -1042,7 +1042,7 @@
             throw new ErroreInternoDatabaseException();
 
         $prestito = pg_fetch_row($result);
-        
+
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
 
@@ -1126,7 +1126,7 @@
             throw new ErroreInternoDatabaseException();
 
         $hash = password_hash($password, HASHING_ALGORITHM);
-        
+
         $query = "SELECT biblioteca.aggiungiBibliotecario($1, $2)";
         if (!pg_prepare($conn, "aggiungi_bibliotecario", $query))
             throw new ErroreInternoDatabaseException();
@@ -1134,7 +1134,7 @@
         $result = pg_execute($conn, "aggiungi_bibliotecario", array($email, $hash));
         if (!$result)
             throw new ErroreInternoDatabaseException();
-        
+
         [$error] = pg_fetch_row($result);
 
         if (!pg_free_result($result))

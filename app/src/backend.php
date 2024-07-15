@@ -40,6 +40,16 @@
         case PROROGA_PRESTITO = 23;
     }
 
+    /**
+     * Aggiunge un autore al database.
+     *
+     * @param $nome il nome dell'autore
+     * @param $cognome il cognome dell'autore
+     * @param $biografia la biografia dell'autore
+     * @param $data_di_nascita la data di nascita dell'autore
+     * @param $data_di_morte la data di morte dell'autore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function aggiungiAutore(string $nome, string $cognome, string $biografia, string $data_di_nascita, string $data_di_morte): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -69,6 +79,12 @@
             throw $error;
     }
 
+    /**
+     * Restituisce tutti gli autori presenti nel database.
+     *
+     * @return un array di array associativi contenenti i dati degli autori
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getAutori(): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -93,6 +109,13 @@
         return $autori;
     }
 
+    /**
+     * Restituisce i dati di un autore dato il suo ID.
+     *
+     * @param $id l'ID dell'autore
+     * @return un array contenente i dati dell'autore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getAutoreById(string $id): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -117,6 +140,13 @@
         return $autore;
     }
 
+    /**
+     * Imposta la data di morte di un autore.
+     *
+     * @param $id_autore l'ID dell'autore
+     * @param $data_di_morte la data di morte dell'autore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function setAutoreDataDiMorte(string $id_autore, string $data_di_morte): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -137,6 +167,13 @@
             throw new ErroreInternoDatabaseException();
     }
 
+    /**
+     * Rimuove un autore dal database.
+     *
+     * @param $id_autore l'ID dell'autore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws LibriAssociatiAdAutoreException se ci sono libri associati all'autore
+     */
     function rimuoviAutore(string $id_autore): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -163,6 +200,17 @@
             throw $error;
     }
 
+    /**
+     * Aggiunge un libro al database.
+     *
+     * @param $isbn l'ISBN del libro
+     * @param $titolo il titolo del libro
+     * @param $trama la trama del libro
+     * @param $casa_editrice la casa editrice del libro
+     * @param $autori un array contenente gli ID degli autori del libro
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws IsbnGiàEsistenteException se l'ISBN è già presente nel database
+     */
     function aggiungiLibro(Isbn $isbn, string $titolo, string $trama, string $casa_editrice, array $autori): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -192,6 +240,12 @@
             throw $error;
     }
 
+    /**
+     * Restituisce tutti i libri presenti nel database.
+     *
+     * @return un array di array associativi contenenti i dati dei libri
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getLibri(): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -216,6 +270,13 @@
         return $libri;
     }
 
+    /**
+     * Restituisce i dati di un libro dato il suo ISBN.
+     *
+     * @param $isbn l'ISBN del libro
+     * @return un array contenente i dati del libro
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getLibroByIsbn(string $isbn): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -240,6 +301,13 @@
         return $libro;
     }
 
+    /**
+     * Rimuove un libro dal database.
+     *
+     * @param $isbn l'ISBN del libro
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws CopieAssociateALibroException se ci sono copie associate al libro
+     */
     function rimuoviLibro(string $isbn): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -266,6 +334,13 @@
             throw $error;
     }
 
+    /**
+     * Aggiunge una sede al database.
+     *
+     * @param $indirizzo l'indirizzo della sede
+     * @param $citta la città della sede
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function aggiungiSede(string $indirizzo, string $citta): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -286,6 +361,12 @@
             throw new ErroreInternoDatabaseException();
     }
 
+    /**
+     * Restituisce tutte le sedi presenti nel database.
+     *
+     * @return un array di array associativi contenenti i dati delle sedi
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getSedi(): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -310,6 +391,13 @@
         return $sedi;
     }
 
+    /**
+     * Restituisce i dati di una sede dato il suo ID.
+     *
+     * @param $id_sede l'ID della sede
+     * @return un array contenente i dati della sede
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getSedeById(string $id_sede): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -334,6 +422,13 @@
         return $sede;
     }
 
+    /**
+     * Restituisce i ritardi di una sede.
+     *
+     * @param $id_sede l'ID della sede
+     * @return un array di array associativi contenenti i dati dei ritardi
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getRitardi(string $id_sede): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -358,6 +453,13 @@
         return $ritardi; 
     }
 
+    /**
+     * Rimuove una sede dal database.
+     *
+     * @param $id_sede l'ID della sede
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws CopieAssociateASedeException se ci sono copie associate alla sede
+     */
     function rimuoviSede(string $id_sede): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -384,6 +486,13 @@
             throw $error;
     }
 
+    /**
+     * Aggiunge una copia al database.
+     *
+     * @param $isbn l'ISBN del libro della copia
+     * @param $id_sede l'ID della sede della copia
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function aggiungiCopia(string $isbn, string $id_sede): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -404,6 +513,12 @@
             throw new ErroreInternoDatabaseException();
     }
 
+    /**
+     * Restituisce tutte le copie presenti nel database.
+     *
+     * @return un array di array associativi contenenti i dati delle copie
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getCopie(): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -428,6 +543,13 @@
         return $copie;
     }
 
+    /**
+     * Restituisce i dati di una copia dato il suo ID.
+     *
+     * @param $id_copia l'ID della copia
+     * @return un array contenente i dati della copia
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getCopiaById(string $id_copia): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -452,6 +574,13 @@
         return $copia;
     }
 
+    /**
+     * Restituisce tutte le copie associate ad una data sede.
+     *
+     * @param $id_sede l'ID della sede
+     * @return un array di array associativi contenenti i dati delle copie
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getCopieBySede(string $id_sede): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -476,6 +605,14 @@
         return $copie;
     }
 
+    /**
+     * Cambia la sede di una copia.
+     *
+     * @param $id_copia l'ID della copia
+     * @param $id_nuova_sede l'ID della nuova sede
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws CopiaInPrestitoException se la copia è in prestito
+     */
     function setSede(string $id_copia, string $id_nuova_sede): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -502,6 +639,13 @@
             throw $error;
     }
 
+    /**
+     * Rimuove una copia dal database.
+     *
+     * @param $id_copia l'ID della copia
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws CopiaInPrestitoException se la copia è in prestito
+     */
     function rimuoviCopia(string $id_copia): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -527,7 +671,19 @@
             throw $error;
     }
 
-    function aggiungiLettore(string $nome, string $cognome, Email $email, 
+    /**
+     * Aggiunge un lettore al database.
+     *
+     * @param $nome il nome del lettore
+     * @param $cognome il cognome del lettore
+     * @param $email l'email del lettore
+     * @param $categoria la categoria del lettore
+     * @param $codice_fiscale il codice fiscale del lettore
+     * @param $password la password del lettore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws LettoreGiàRegistratoException se il lettore è già registrato
+     */
+    function aggiungiLettore(string $nome, string $cognome, Email $email,
             Categoria $categoria, CodiceFiscale $codice_fiscale, string $password): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -556,6 +712,12 @@
             throw $error;
     }
 
+    /**
+     * Restituisce tutti i lettori presenti nel database.
+     *
+     * @return un array di array associativi contenenti i dati dei lettori
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getLettori(): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -580,6 +742,13 @@
         return $lettori;
     }
 
+    /**
+     * Restituisce i dati di un lettore dato il suo codice fiscale.
+     *
+     * @param $codice_fiscale il codice fiscale del lettore
+     * @return un array contenente i dati del lettore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getLettoreByCodiceFiscale(CodiceFiscale $codice_fiscale): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -604,6 +773,13 @@
         return $lettore;
     }
 
+    /**
+     * Restituisce i dati di un lettore dato l'email.
+     *
+     * @param $email l'email del lettore
+     * @return un array contenente i dati del lettore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getLettoreByEmail(Email $email): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -628,6 +804,14 @@
         return $lettore;
     }
 
+    /**
+     * Imposta l'email di un lettore.
+     *
+     * @param $codice_fiscale il codice fiscale del lettore
+     * @param $nuova_email la nuova email del lettore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws LettoreGiàRegistratoException se l'email è già associata ad un altro lettore
+     */
     function setLettoreEmail(CodiceFiscale $codice_fiscale, Email $nuova_email): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -656,6 +840,15 @@
         setcookie("user_email", $nuova_email, time() + 3600, "/");
     }
 
+    /**
+     * Imposta la password di un lettore se la vecchia password è corretta.
+     *
+     * @param $codice_fiscale il codice fiscale del lettore
+     * @param $vecchia_password la vecchia password del lettore
+     * @param $nuova_password la nuova password del lettore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws PasswordErrataException se la vecchia password è errata
+     */
     function setLettorePassword(CodiceFiscale $codice_fiscale, string $vecchia_password, string $nuova_password): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -682,6 +875,13 @@
             throw new ErroreInternoDatabaseException();
     }
 
+    /**
+     * Imposta la categoria di un lettore.
+     *
+     * @param $codice_fiscale il codice fiscale del lettore
+     * @param $categoria la nuova categoria del lettore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function setLettoreCategoria(CodiceFiscale $codice_fiscale, Categoria $categoria): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -702,6 +902,12 @@
             throw new ErroreInternoDatabaseException();
     }
 
+    /**
+     * Azzera i ritardi di un lettore.
+     *
+     * @param $codice_fiscale il codice fiscale del lettore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function azzeraRitardi(CodiceFiscale $codice_fiscale): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -722,6 +928,13 @@
             throw new ErroreInternoDatabaseException();
     }
 
+    /**
+     * Rimuove un lettore dal database.
+     *
+     * @param $codice_fiscale il codice fiscale del lettore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws LettorePrestitiInCorsoException se il lettore ha dei prestiti in corso
+     */
     function rimuoviLettore(CodiceFiscale $codice_fiscale): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -748,6 +961,16 @@
             throw $error;
     }
 
+    /**
+     * Richiede una copia in prestito.
+     *
+     * @param $id_copia l'ID della copia
+     * @param $cf_lettore il codice fiscale del lettore
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws CopiaNonDisponibileException se la copia non è disponibile
+     * @throws TroppeConsegneInRitardoException se il lettore ha troppe consegne in ritardo
+     * @throws TroppiPrestitiInCorsoException se il lettore ha troppi prestiti in corso
+     */
     function richiediPrestito(string $id_copia, CodiceFiscale $cf_lettore): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -774,6 +997,12 @@
             throw $error;
     }
 
+    /**
+     * Restituisce tutti i prestiti presenti nel database.
+     *
+     * @return un array di array associativi contenenti i dati dei prestiti
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getPrestiti(): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -798,6 +1027,13 @@
         return $prestiti;
     }
 
+    /**
+     * Restituisce i dati di un prestito dato l'ID della copia.
+     *
+     * @param $id_copia l'ID della copia
+     * @return un array contenente i dati del prestito
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getPrestitoByCopia(string $id_copia): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -822,6 +1058,12 @@
         return $prestito;
     }
 
+    /**
+     * Restituisce una copia presa in prestito.
+     *
+     * @param $id_copia l'ID della copia
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function restituisciPrestito(string $id_copia): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -848,6 +1090,14 @@
             throw $error;
     }
 
+    /**
+     * Proroga un prestito.
+     *
+     * @param $id_copia l'ID della copia
+     * @param $giorni_di_proroga i giorni di proroga
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws PrestitoInRitardoException se il prestito è già in ritardo
+     */
     function prorogaPrestito(string $id_copia, int $giorni_di_proroga): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -874,6 +1124,14 @@
             throw $error;
     }
 
+    /**
+     * Aggiunge un bibliotecario al database.
+     *
+     * @param $email l'email del bibliotecario
+     * @param $password la password del bibliotecario
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws BibliotecarioGiàRegistratoException se il bibliotecario è già registrato
+     */
     function aggiungiBibliotecario(Email $email, string $password): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -902,6 +1160,12 @@
             throw $error;
     }
 
+    /**
+     * Restituisce tutti i bibliotecari presenti nel database.
+     *
+     * @return un array di array associativi contenenti i dati dei bibliotecari
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getBibliotecari(): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -926,6 +1190,13 @@
         return $bibliotecari;
     }
 
+    /**
+     * Restituisce i dati di un bibliotecario dato il suo ID.
+     *
+     * @param $id_bibliotecario l'ID del bibliotecario
+     * @return un array contenente i dati del bibliotecario
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getBibliotecarioById(string $id_bibliotecario): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -950,6 +1221,13 @@
         return $bibliotecario;
     }
 
+    /**
+     * Restituisce i dati di un bibliotecario data l'email.
+     *
+     * @param $email l'email del bibliotecario
+     * @return un array contenente i dati del bibliotecario
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function getBibliotecarioByEmail(Email $email): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -974,6 +1252,14 @@
         return $bibliotecario;
     }
 
+    /**
+     * Imposta l'email di un bibliotecario.
+     *
+     * @param $id_bibliotecario l'ID del bibliotecario
+     * @param $nuova_email la nuova email del bibliotecario
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws BibliotecarioGiàRegistratoException se l'email è già associata ad un altro bibliotecario
+     */
     function setBibliotecarioEmail(string $id_bibliotecario, Email $nuova_email): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -1002,6 +1288,15 @@
         setcookie('user_email', $nuova_email, time() + 3600, '/');
     }
 
+    /**
+     * Imposta la password di un bibliotecario se la vecchia password è corretta.
+     *
+     * @param $id_bibliotecario l'ID del bibliotecario
+     * @param $vecchia_password la vecchia password del bibliotecario
+     * @param $nuova_password la nuova password del bibliotecario
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws PasswordErrataException se la vecchia password è errata
+     */
     function setBibliotecarioPassword(string $id_bibliotecario, string $vecchia_password, string $nuova_password): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -1028,6 +1323,12 @@
             throw new ErroreInternoDatabaseException();
     }
 
+    /**
+     * Rimuove un bibliotecario dal database.
+     *
+     * @param $id_bibliotecario l'ID del bibliotecario
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
     function rimuoviBibliotecario(string $id_bibliotecario): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -1050,6 +1351,17 @@
 
     // altre funzioni
 
+    /**
+     * Esegue il login di un utente: se la password è corretta vengono creati
+     * due cookie, uno contenente l'ID dell'utente ('user_id') e l'altro
+     * contenente l'email ('user_email').
+     *
+     * @param $utente il tipo di utente (lettore o bibliotecario)
+     * @param $email l'email dell'utente
+     * @param $password la password dell'utente
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @throws PasswordErrataException se la password è errata
+     */
     function login(Utente $utente, Email $email, string $password): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
@@ -1072,6 +1384,12 @@
         setcookie('user_email', $email, time() + 3600, '/');
     }
 
+    /**
+     * Controlla se un utente è loggato da lettore o da bibliotecario.
+     *
+     * @param $utente il tipo di utente (lettore o bibliotecario)
+     * @return true se l'utente è loggato, false altrimenti
+     */
     function isLoggedIn(Utente $utente): bool {
         if (!isset($_COOKIE['user_id']))
             return false;
@@ -1089,6 +1407,9 @@
         return false;
     }
 
+    /**
+     * Esegue il logout dell'utente eliminando i cookie 'user_id' e 'user_email'.
+     */
     function logout(): void {
         setcookie('user_id', '', time() - 3600, '/');
         setcookie('user_email', '', time() - 3600, '/');

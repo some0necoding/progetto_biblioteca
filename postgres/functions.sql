@@ -215,6 +215,24 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- Restituisce tutti i libri associati ad una sede, i.e. che hanno almeno una
+-- copia di tali libri associata.
+--
+-- @param sede l'id della sede
+-- @return tabella di libri
+CREATE OR REPLACE FUNCTION biblioteca.getLibriBySede(sede biblioteca.sede.id%TYPE)
+RETURNS SETOF biblioteca.libro
+AS $$
+BEGIN
+    RETURN QUERY SELECT DISTINCT libro.isbn, libro.titolo, libro.trama, libro.casa_editrice
+                 FROM biblioteca.copia
+                 JOIN biblioteca.libro ON copia.libro = libro.isbn
+                 WHERE copia.sede = getCopieBySede.sede;
+    RETURN;
+END;
+$$
+LANGUAGE plpgsql;
+
 -- Rimuove un libro dal database. Se il libro ha copie associate, l'operazione fallisce.
 --
 -- @param libro l'isbn del libro
@@ -384,18 +402,35 @@ END;
 $$
 LANGUAGE plpgsql;
 
--- Restituisce tutte le copie associate ad una data sede.
+-- Restituisce tutte le copie disponibili di un tale libro. Se sede != NULL la
+-- ricerca viene ristretta alla sede specificata.
 --
--- @param sede l'id della sede
--- @return tabella di copie
-CREATE OR REPLACE FUNCTION biblioteca.getCopieBySede(sede biblioteca.sede.id%TYPE)
-RETURNS SETOF biblioteca.copia
+-- @param libro l'id del libro di cui si sta cercando una copia disponibile
+-- @param sede l'id della sede a cui si restringe la ricerca (se != NULL)
+-- @return l'id della copia disponibile se esiste, NULL altrimenti
+CREATE OR REPLACE FUNCTION biblioteca.getCopiaDisponibile(libro biblioteca.libro.isbn%TYPE,
+                                                          sede biblioteca.sede.id%TYPE)
+RETURNS biblioteca.copia.id%TYPE
 AS $$
+DECLARE
+    copiaTrovata biblioteca.copia.id%TYPE;
 BEGIN
-    RETURN QUERY SELECT *
-                 FROM biblioteca.copia
-                 WHERE copia.sede = getCopieBySede.sede;
-    RETURN;
+    IF SEDE IS NOT NULL THEN
+        SELECT copia.id INTO copiaTrovata
+        FROM biblioteca.copia
+        WHERE copia.sede = getCopiaDisponibile.sede AND
+              copia.libro = getCopiaDisponibile.isbn;
+    ELSE
+        SELECT copia.id INTO copiaTrovata
+        FROM biblioteca.copia
+        WHERE copia.libro = getCopiaDisponibile.isbn;
+    END IF;
+
+    IF NOT FOUND THEN
+        RETURN NULL;
+    END IF;
+
+    RETURN copiaTrovata;
 END;
 $$
 LANGUAGE plpgsql;

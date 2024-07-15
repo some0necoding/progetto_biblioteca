@@ -296,6 +296,37 @@
     }
 
     /**
+     * Restituisce tutti i libri associati ad una data sede.
+     *
+     * @param $id_sede l'ID della sede
+     * @return un array di array associativi contenenti i dati dei libri
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
+    function getLibriBySede(string $id_sede): array {
+        $conn = pg_connect(CONNECTION_STRING);
+        if (!$conn)
+            throw new ErroreInternoDatabaseException();
+
+        $query = "SELECT biblioteca.getLibriBySede($1)";
+        if (!pg_prepare($conn, "get_libri_by_sede", $query))
+            throw new ErroreInternoDatabaseException();
+
+        $result = pg_execute($conn, "get_libri_by_sede", array($id_sede));
+        if (!$result)
+            throw new ErroreInternoDatabaseException();
+
+        $libri = pg_fetch_all($result);
+
+        if (!pg_free_result($result))
+            throw new ErroreInternoDatabaseException();
+
+        if (!pg_close($conn))
+            throw new ErroreInternoDatabaseException();
+
+        return $libri;
+    }
+
+    /**
      * Rimuove un libro dal database.
      *
      * @param $isbn l'ISBN del libro
@@ -569,26 +600,30 @@
     }
 
     /**
-     * Restituisce tutte le copie associate ad una data sede.
+     * Restituisce tutte le copie disponibili di un tale libro. Se sede != null la
+     * ricerca viene ristretta alla sede specificata.
      *
-     * @param $id_sede l'ID della sede
-     * @return un array di array associativi contenenti i dati delle copie
-     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     * @param libro l'id del libro di cui si sta cercando una copia disponibile
+     * @param id_sede l'id della sede a cui si restringe la ricerca (se != NULL)
+     * @return l'id della copia disponibile se esiste
+     * @throws CopiaNonDisponibileException se non esiste una copia disponibile
      */
-    function getCopieBySede(string $id_sede): array {
+    function getCopiaDisponibile(string $libro, string $id_sede): string {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getCopieBySede($1)";
-        if (!pg_prepare($conn, "get_copie_by_sede", $query))
+        $query = "SELECT biblioteca.getCopiaDisponibile($1, $2)";
+        if (!pg_prepare($conn, "get_copia_disponibile", $query))
             throw new ErroreInternoDatabaseException();
 
-        $result = pg_execute($conn, "get_copie_by_sede", array($id_sede));
+        $result = pg_execute($conn, "get_copia_disponibile", array($libro, $id_sede));
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $copie = pg_fetch_all($result);
+        $copia = pg_fetch_row($result);
+        if (is_null($copia))
+            throw new CopiaNonDisponibileException();
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -596,7 +631,7 @@
         if (!pg_close($conn))
             throw new ErroreInternoDatabaseException();
 
-        return $copie;
+        return $copia;
     }
 
     /**

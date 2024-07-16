@@ -1346,8 +1346,7 @@
 
     /**
      * Esegue il login di un utente: se la password è corretta vengono creati
-     * due cookie, uno contenente l'ID dell'utente ('user_id') e l'altro
-     * contenente l'email ('user_email').
+     * due campi di sessione: 'user_id' e 'user_email'.
      *
      * @param $utente il tipo di utente (lettore o bibliotecario)
      * @param $email l'email dell'utente
@@ -1373,8 +1372,8 @@
         if (!password_verify($password, $hash))
             throw new PasswordErrataException();
 
-        setcookie('user_id', $id, time() + 3600, '/');
-        setcookie('user_email', $email, time() + 3600, '/');
+        $_SESSION['user_id'] = $id;
+        $_SESSION['user_email'] = $email;
     }
 
     /**
@@ -1384,10 +1383,10 @@
      * @return true se l'utente è loggato, false altrimenti
      */
     function isLoggedIn(Utente $utente): bool {
-        if (!isset($_COOKIE['user_id']))
+        if (!isset($_SESSION['user_id']))
             return false;
 
-        $id = $_COOKIE['user_id'];
+        $id = $_SESSION['user_id'];
         if ($utente == Utente::BIBLIOTECARIO)
             $user = getBibliotecarioById($id);
         else if ($utente == Utente::LETTORE)
@@ -1401,11 +1400,12 @@
     }
 
     /**
-     * Esegue il logout dell'utente eliminando i cookie 'user_id' e 'user_email'.
+     * Esegue il logout dell'utente eliminando i campi di sessione 'user_id' e
+     * 'user_email'.
      */
     function logout(): void {
-        setcookie('user_id', '', time() - 3600, '/');
-        setcookie('user_email', '', time() - 3600, '/');
+        unset($_SESSION['user_id']);
+        unset($_SESSION['user_email']);
     }
 
 ?>

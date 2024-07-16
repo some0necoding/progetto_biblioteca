@@ -68,7 +68,7 @@
 
         public function __construct(string $codice_fiscale) {
             if (!preg_match('/' . PATTERN . '/i', $codice_fiscale))
-                throw new InvalidCodiceFiscalException($codice_fiscale);
+                throw new InvalidCodiceFiscaleException($codice_fiscale);
             $this->codice_fiscale = $codice_fiscale;
         }
 

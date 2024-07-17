@@ -74,15 +74,14 @@ LANGUAGE plpgsql;
 -- @param id l'id dell'autore
 -- @return l'autore con l'id specificato
 CREATE OR REPLACE FUNCTION biblioteca.getAutoreById(id biblioteca.autore.id%TYPE)
-RETURNS biblioteca.autore
+RETURNS SETOF biblioteca.autore
 AS $$
-DECLARE
-    autoreTrovato biblioteca.autore%ROWTYPE;
 BEGIN
-    SELECT * INTO autoreTrovato
-         FROM biblioteca.autore
-         WHERE autore.id = getAutoreById.id;
-    RETURN autoreTrovato;
+    RETURN QUERY SELECT *
+                 FROM biblioteca.autore
+                 WHERE autore.id = getAutoreById.id;
+
+    RETURN;
 END;
 $$
 LANGUAGE plpgsql;
@@ -202,15 +201,14 @@ LANGUAGE plpgsql;
 -- @param isbn l'isbn del libro
 -- @return il libro con l'isbn specificato
 CREATE OR REPLACE FUNCTION biblioteca.getLibroByIsbn(isbn biblioteca.libro.isbn%TYPE)
-RETURNS biblioteca.libro
+RETURNS SETOF biblioteca.libro
 AS $$
-DECLARE
-    libroTrovato biblioteca.libro%ROWTYPE;
 BEGIN
-    SELECT * INTO libroTrovato
-         FROM biblioteca.libro
-         WHERE libro.isbn = getLibroByIsbn.isbn;
-    RETURN libroTrovato;
+    RETURN QUERY SELECT *
+                 FROM biblioteca.libro
+                 WHERE libro.isbn = getLibroByIsbn.isbn;
+
+    RETURN;
 END;
 $$
 LANGUAGE plpgsql;
@@ -296,15 +294,14 @@ LANGUAGE plpgsql;
 -- @param id l'id della sede
 -- @return la sede con l'id specificato
 CREATE OR REPLACE FUNCTION biblioteca.getSedeById(id biblioteca.sede.id%TYPE)
-RETURNS biblioteca.sede
+RETURNS SETOF biblioteca.sede
 AS $$
-DECLARE
-    sedeTrovata biblioteca.sede%ROWTYPE;
 BEGIN
-    SELECT * INTO sedeTrovata
-         FROM biblioteca.sede
-         WHERE sede.id = getSedeById.id;
-    RETURN sedeTrovata;
+    RETURN QUERY SELECT *
+                 FROM biblioteca.sede
+                 WHERE sede.id = getSedeById.id;
+
+    RETURN;
 END;
 $$
 LANGUAGE plpgsql;
@@ -389,15 +386,14 @@ LANGUAGE plpgsql;
 -- @param id l'id della copia
 -- @return la copia con l'id specificato
 CREATE OR REPLACE FUNCTION biblioteca.getCopiaById(id biblioteca.copia.id%TYPE)
-RETURNS biblioteca.copia
+RETURNS SETOF biblioteca.copia
 AS $$
-DECLARE
-    copiaTrovata biblioteca.copia%ROWTYPE;
 BEGIN
-    SELECT * INTO copiaTrovata
-         FROM biblioteca.copia
-         WHERE copia.id = getCopiaById.id;
-    RETURN copiaTrovata;
+    RETURN QUERY SELECT *
+                 FROM biblioteca.copia
+                 WHERE copia.id = getCopiaById.id;
+
+    RETURN;
 END;
 $$
 LANGUAGE plpgsql;
@@ -669,15 +665,14 @@ LANGUAGE plpgsql;
 -- @param codice_fiscale il codice fiscale del lettore
 -- @return il lettore con il codice fiscale specificato
 CREATE OR REPLACE FUNCTION biblioteca.getLettoreByCodiceFiscale(codice_fiscale biblioteca.lettore.codice_fiscale%TYPE)
-RETURNS biblioteca.lettore
+RETURNS SETOF biblioteca.lettore
 AS $$
-DECLARE
-    lettoreTrovato biblioteca.lettore%ROWTYPE;
 BEGIN
-    SELECT * INTO lettoreTrovato
+    RETURN QUERY SELECT *
          FROM biblioteca.lettore
          WHERE lettore.codice_fiscale = getLettoreByCodiceFiscale.codice_fiscale;
-    RETURN lettoreTrovato;
+
+    RETURN;
 END;
 $$
 LANGUAGE plpgsql;
@@ -687,16 +682,14 @@ LANGUAGE plpgsql;
 -- @param email l'email del lettore
 -- @return il lettore con l'email specificata
 CREATE OR REPLACE FUNCTION biblioteca.getLettoreByEmail(email biblioteca.lettore.email%TYPE)
-RETURNS biblioteca.lettore
+RETURNS SETOF biblioteca.lettore
 AS $$
-DECLARE
-    lettoreTrovato biblioteca.lettore%ROWTYPE;
 BEGIN
-    SELECT * INTO lettoreTrovato
-    FROM biblioteca.lettore
-    WHERE lettore.email = getLettoreByEmail.email;
+    RETURN QUERY SELECT *
+                 FROM biblioteca.lettore
+                 WHERE lettore.email = getLettoreByEmail.email;
 
-    RETURN lettoreTrovato;
+    RETURN;
 END;
 $$
 LANGUAGE plpgsql;
@@ -881,15 +874,14 @@ LANGUAGE plpgsql;
 -- @param copia l'id della copia
 -- @return il prestito della copia specificata
 CREATE OR REPLACE FUNCTION biblioteca.getPrestitoByCopia(copia biblioteca.copia.id%TYPE)
-RETURNS biblioteca.prestito
+RETURNS SETOF biblioteca.prestito
 AS $$
-DECLARE
-    prestitoTrovato biblioteca.prestito%ROWTYPE;
 BEGIN
-    SELECT * INTO prestitoTrovato
-         FROM biblioteca.prestito
-         WHERE prestito.copia = getPrestitoByCopia.copia;
-    RETURN prestitoTrovato;
+    RETURN QUERY SELECT *
+                 FROM biblioteca.prestito
+                 WHERE prestito.copia = getPrestitoByCopia.copia;
+
+    RETURN;
 END;
 $$
 LANGUAGE plpgsql;
@@ -1156,15 +1148,14 @@ LANGUAGE plpgsql;
 -- @param id l'id del bibliotecario
 -- @return il bibliotecario con l'id specificato
 CREATE OR REPLACE FUNCTION biblioteca.getBibliotecarioById(id biblioteca.bibliotecario.id%TYPE)
-RETURNS biblioteca.bibliotecario
+RETURNS SETOF biblioteca.bibliotecario
 AS $$
-DECLARE
-    bibliotecarioTrovato biblioteca.bibliotecario%ROWTYPE;
 BEGIN
-    SELECT * INTO bibliotecarioTrovato
-         FROM biblioteca.bibliotecario
-         WHERE bibliotecario.id = getBibliotecarioById.id;
-    RETURN bibliotecarioTrovato;
+    RETURN QUERY SELECT *
+                 FROM biblioteca.bibliotecario
+                 WHERE bibliotecario.id = getBibliotecarioById.id;
+
+    RETURN;
 END;
 $$
 LANGUAGE plpgsql;
@@ -1174,16 +1165,14 @@ LANGUAGE plpgsql;
 -- @param email l'email del bibliotecario
 -- @return il bibliotecario con la mail specificata
 CREATE OR REPLACE FUNCTION biblioteca.getBibliotecarioByEmail(email biblioteca.bibliotecario.email%TYPE)
-RETURNS biblioteca.bibliotecario
+RETURNS SETOF biblioteca.bibliotecario
 AS $$
-DECLARE
-    bibliotecarioTrovato biblioteca.bibliotecario%ROWTYPE;
 BEGIN
-    SELECT * INTO bibliotecarioTrovato
-    FROM biblioteca.bibliotecario
-    WHERE bibliotecario.email = getBibliotecarioByEmail.email;
+    RETURN QUERY SELECT *
+                 FROM biblioteca.bibliotecario
+                 WHERE bibliotecario.email = getBibliotecarioByEmail.email;
 
-    RETURN bibliotecarioTrovato;
+    RETURN;
 END;
 $$
 LANGUAGE plpgsql;

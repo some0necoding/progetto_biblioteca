@@ -248,8 +248,6 @@
         public function esegui(): array {
             if (!isset($this->inputs['titolo']) || empty($this->inputs['titolo']))
                 $this->errors['titolo'] = 'Il titolo è obbligatorio';
-            if (!isset($this->inputs['isbn']) || empty($this->inputs['isbn']))
-                $this->errors['isbn'] = 'L\'isbn è obbligatorio';
             if (!isset($this->inputs['trama']))
                 $this->inputs['trama'] = '';
             if (!isset($this->inputs['casa_editrice']) || empty($this->inputs['casa_editrice']))
@@ -258,7 +256,10 @@
                 $this->errors['autori'] = 'Gli autori sono obbligatori';
 
             try {
-                $this->inputs['isbn'] = new Isbn($this->inputs['isbn']);
+                if (!isset($this->inputs['isbn']) || empty($this->inputs['isbn']))
+                    $this->errors['isbn'] = 'L\'isbn è obbligatorio';
+                else
+                    $this->inputs['isbn'] = new Isbn($this->inputs['isbn']);
             } catch (InvalidIsbnException $e) {
                 $this->errors['isbn'] = 'Isbn non valido';
             }
@@ -301,11 +302,11 @@
          *               Formato: [ 'isbn' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['isbn']) || empty($this->inputs['isbn']))
-                $this->errors['isbn'] = 'L\'isbn è obbligatorio';
-
             try {
-                $this->inputs['isbn'] = new Isbn($this->inputs['isbn']);
+                if (!isset($this->inputs['isbn']) || empty($this->inputs['isbn']))
+                    $this->errors['isbn'] = 'L\'isbn è obbligatorio';
+                else
+                    $this->inputs['isbn'] = new Isbn($this->inputs['isbn']);
             } catch (InvalidIsbnException $e) {
                 $this->errors['isbn'] = 'Isbn non valido';
             }
@@ -415,13 +416,14 @@
          *               Formato: [ 'libro', 'sede' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['libro']) || empty($this->inputs['libro']))
-                $this->errors['libro'] = 'Il libro è obbligatorio';
             if (!isset($this->inputs['sede']) || empty($this->inputs['sede']))
                 $this->errors['sede'] = 'La sede è obbligatoria';
 
             try {
-                $this->inputs['libro'] = new Isbn($this->inputs['libro']);
+                if (!isset($this->inputs['libro']) || empty($this->inputs['libro']))
+                    $this->errors['libro'] = 'Il libro è obbligatorio';
+                else
+                    $this->inputs['libro'] = new Isbn($this->inputs['libro']);
             } catch (InvalidIsbnException $e) {
                 $this->errors['libro'] = 'Isbn non valido';
             }
@@ -531,8 +533,6 @@
          *               Formato: [ 'email', 'password1', 'password2 ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
-                $this->errors['email'] = 'L\'email è obbligatoria';
             if (!isset($this->inputs['password1']) || empty($this->inputs['password1']))
                 $this->errors['password1'] = 'La password è obbligatoria';
             if (!isset($this->inputs['password2']) || empty($this->inputs['password2']))
@@ -543,7 +543,10 @@
             }
 
             try {
-                $this->inputs['email'] = new Email($this->inputs['email']);
+                if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                    $this->errors['email'] = 'L\'email è obbligatoria';
+                else
+                    $this->inputs['email'] = new Email($this->inputs['email']);
             } catch (InvalidEmailException $e) {
                 $this->errors['email'] = 'Email non valida';
             }
@@ -584,11 +587,12 @@
         public function esegui(): array {
             if (!isset($this->inputs['id']) || empty($this->inputs['id']))
                 $this->errors['id'] = 'L\'id è obbligatorio';
-            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
-                $this->errors['email'] = 'L\'email è obbligatoria';
 
             try {
-                $this->inputs['email'] = new Email($this->inputs['email']);
+                if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                    $this->errors['email'] = 'L\'email è obbligatoria';
+                else
+                    $this->inputs['email'] = new Email($this->inputs['email']);
             } catch (InvalidEmailException $e) {
                 $this->errors['email'] = 'Email non valida';
             }
@@ -710,14 +714,10 @@
          *                          'email', 'categoria', 'password1', 'password2' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
-                $this->errors['codice_fiscale'] = 'Il codice fiscale è obbligatorio';
             if (!isset($this->inputs['nome']) || empty($this->inputs['nome']))
                 $this->errors['nome'] = 'Il nome è obbligatorio';
             if (!isset($this->inputs['cognome']) || empty($this->inputs['cognome']))
                 $this->errors['cognome'] = 'Il cognome è obbligatorio';
-            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
-                $this->errors['email'] = 'L\'email è obbligatoria';
             if (!isset($this->inputs['password1']) || empty($this->inputs['password1']))
                 $this->errors['password1'] = 'La password è obbligatoria';
             if (!isset($this->inputs['password2']) || empty($this->inputs['password2']))
@@ -726,13 +726,22 @@
                 $this->errors['password1'] = 'Le password non coincidono';
                 $this->errors['password2'] = '';
             }
-            if (!isset($this->inputs['categoria']) || empty($this->inputs['categoria']))
-                $this->errors['categoria'] = 'La categoria è obbligatoria';
 
             try {
-                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
-                $this->inputs['categoria'] = Categoria::from($this->inputs['categoria']);
-                $this->inputs['email'] = new Email($this->inputs['email']);
+                if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                    $this->errors['codice_fiscale'] = 'Il codice fiscale è obbligatorio';
+                else
+                    $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
+
+                if (!isset($this->inputs['categoria']) || empty($this->inputs['categoria']))
+                    $this->errors['categoria'] = 'La categoria è obbligatoria';
+                else
+                    $this->inputs['categoria'] = Categoria::from($this->inputs['categoria']);
+
+                if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                    $this->errors['email'] = 'L\'email è obbligatoria';
+                else
+                    $this->inputs['email'] = new Email($this->inputs['email']);
             } catch (InvalidCodiceFiscaleException $e) {
                 $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             } catch (InvalidEmailException $e) {
@@ -750,7 +759,8 @@
                                     $this->inputs['codice_fiscale'],
                                     $this->inputs['password1']);
                 } catch (LettoreGiàRegistratoException $e) {
-                    $this->errors['email'] = 'Email già registrata';
+                    $this->errors['email'] = 'Email o codice fiscale già registrati';
+                    $this->errors['codice_fiscale'] = '';
                 }
             }
 
@@ -780,14 +790,16 @@
          *               Formato: [ 'codice_fiscale', 'email' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
-                $this->errors['codice_fiscale'] = 'Il codice fiscale è obbligatorio';
-            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
-                $this->errors['email'] = 'L\'email è obbligatoria';
-
             try {
-                $this->inputs['email'] = new Email($this->inputs['email']);
-                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
+                if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                    $this->errors['codice_fiscale'] = 'Il codice fiscale è obbligatorio';
+                else
+                    $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
+
+                if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                    $this->errors['email'] = 'L\'email è obbligatoria';
+                else
+                    $this->inputs['email'] = new Email($this->inputs['email']);
             } catch (InvalidEmailException $e) {
                 $this->errors['email'] = 'Email non valida';
             } catch (InvalidCodiceFiscaleException $e) {
@@ -828,8 +840,6 @@
          *               Formato: [ 'codice_fiscale', 'vecchia_password', 'password1', 'password2' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
-                $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
             if (!isset($this->inputs['vecchia_password']) || empty($this->inputs['vecchia_password']))
                 $this->errors['vecchia_password'] = 'Inserisci la vecchia password';
             if (!isset($this->inputs['password1']) || empty($this->inputs['password1']))
@@ -842,7 +852,10 @@
             }
 
             try {
-                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
+                if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                    $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
+                else
+                    $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
             } catch (InvalidCodiceFiscaleException $e) {
                 $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             }
@@ -881,14 +894,16 @@
          *               Formato: [ 'codice_fiscale', 'categoria' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
-                $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
-            if (!isset($this->inputs['categoria']) || empty($this->inputs['categoria']))
-                $this->errors['categoria'] = 'La categoria è obbligatoria';
-
             try {
-                $this->inputs['categoria'] = Categoria::from($this->inputs['categoria']);
-                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
+                if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                    $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
+                else
+                    $this->inputs['categoria'] = Categoria::from($this->inputs['categoria']);
+
+                if (!isset($this->inputs['categoria']) || empty($this->inputs['categoria']))
+                    $this->errors['categoria'] = 'La categoria è obbligatoria';
+                else
+                    $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
             } catch (ValueError $e) {
                 $this->errors['categoria'] = 'Categoria non valida';
             } catch (InvalidCodiceFiscaleException $e) {
@@ -924,11 +939,11 @@
          *               Formato: [ 'codice_fiscale' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
-                $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
-
             try {
-                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
+                if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                    $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
+                else
+                    $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
             } catch (InvalidCodiceFiscaleException $e) {
                 $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             }
@@ -962,11 +977,11 @@
          *               Formato: [ 'codice_fiscale' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
-                $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
-
             try {
-                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
+                if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                    $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
+                else
+                    $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
             } catch (InvalidCodiceFiscaleException $e) {
                 $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             }
@@ -1005,16 +1020,19 @@
          *               Formato: [ 'libro', 'sede', 'lettore' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['libro']) || empty($this->inputs['libro']))
-                $this->errors['libro'] = 'Il libro è obbligatorio';
             if (!isset($this->inputs['sede']) || empty($this->inputs['sede']))
                 $this->errors['sede'] = null;
-            if (!isset($this->inputs['lettore']) || empty($this->inputs['lettore']))
-                $this->errors['lettore'] = 'Il lettore è obbligatorio';
 
             try {
-                $this->inputs['libro'] = new Isbn($this->inputs['libro']);
-                $this->inputs['lettore'] = new CodiceFiscale($this->inputs['lettore']);
+                if (!isset($this->inputs['libro']) || empty($this->inputs['libro']))
+                    $this->errors['libro'] = 'Il libro è obbligatorio';
+                else
+                    $this->inputs['libro'] = new Isbn($this->inputs['libro']);
+
+                if (!isset($this->inputs['lettore']) || empty($this->inputs['lettore']))
+                    $this->errors['lettore'] = 'Il lettore è obbligatorio';
+                else
+                    $this->inputs['lettore'] = new CodiceFiscale($this->inputs['lettore']);
             } catch (InvalidIsbnException $e) {
                 $this->errors['libro'] = 'Isbn non valido';
             } catch (InvalidCodiceFiscaleException $e) {
@@ -1134,24 +1152,32 @@
          *               Formato: [ 'utente', 'email', 'password' ]
          */
         public function esegui(): array {
-            if (!isset($this->inputs['utente']) || empty($this->inputs['utente']))
-                $this->errors['utente'] = 'L\'utente è obbligatorio';
-            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
-                $this->errors['email'] = 'L\'email è obbligatoria';
             if (!isset($this->inputs['password']) || empty($this->inputs['password']))
                 $this->errors['password'] = 'La password è obbligatoria';
 
             try {
-                $this->inputs['utente'] = Utente::from($this->inputs['utente']);
-                $this->inputs['email'] = new Email($this->inputs['email']);
-                login($this->inputs['utente'], $this->inputs['email'], $this->inputs['password']);
+                if (!isset($this->inputs['utente']) || empty($this->inputs['utente']))
+                    $this->errors['utente'] = 'L\'utente è obbligatorio';
+                else
+                    $this->inputs['utente'] = Utente::from($this->inputs['utente']);
+
+                if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                    $this->errors['email'] = 'L\'email è obbligatoria';
+                else
+                    $this->inputs['email'] = new Email($this->inputs['email']);
             } catch (InvalidEmailException $e) {
                 $this->errors['email'] = 'Inserisci una mail valida';
             } catch (ValueError $e) {
                 $this->errors['utente'] = 'Inserisci un utente valido';
-            } catch (PasswordErrataException | UtenteInesistenteException $e) {
-                $this->errors['email'] = 'Email o password sono errati';
-                $this->errors['password'] = '';
+            }
+
+            if (empty($this->errors)) {
+                try {
+                    login($this->inputs['utente'], $this->inputs['email'], $this->inputs['password']);
+                } catch (PasswordErrataException | UtenteInesistenteException $e) {
+                    $this->errors['email'] = 'Email o password sono errati';
+                    $this->errors['password'] = '';
+                }
             }
 
             return $this->errors;

@@ -40,7 +40,7 @@
             parent::__construct("Database error: $message");
         }
 
-        public static function fromEnumString(string $error): DatabaseException {
+        public static function fromEnumString(string $error): ?DatabaseException {
             if (!array_key_exists($error, self::$exceptions))
                 return null;
 

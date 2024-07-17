@@ -1,7 +1,7 @@
 <?php
-    include_once '../backend/exceptions.php';
-    include_once '../backend/backend.php';
-    include_once '../backend/objects.php';
+    include_once '../src/backend/exceptions.php';
+    include_once '../src/backend/backend.php';
+    include_once '../src/backend/objects.php';
 
     enum TipoOperazione: int {
         case AGGIUNGI_AUTORE = 1;

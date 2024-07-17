@@ -34,7 +34,8 @@
             throw new ErroreInternoDatabaseException();
 
         $params = array($nome, $cognome, $biografia, $data_di_nascita);
-        $params += empty($data_di_morte) ? [] : array($data_di_morte);
+        if (!empty($data_di_morte))
+            $params[] = $data_di_morte;
         $result = pg_execute($conn, "aggiungi_autore", $params);
         if (!$result)
             throw new ErroreInternoDatabaseException();

@@ -864,13 +864,13 @@
      * @throws PasswordErrataException se la vecchia password è errata
      */
     function setLettorePassword(CodiceFiscale $codice_fiscale, string $vecchia_password, string $nuova_password): void {
+        $password = getLettoreByCodiceFiscale($codice_fiscale)["hash"];
+        if (!password_verify($vecchia_password, $password))
+            throw new PasswordErrataException();
+
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
             throw new ErroreInternoDatabaseException();
-
-        $password = getLettoreByCodiceFiscale($codice_fiscale)["password"];
-        if (!password_verify($vecchia_password, $password))
-            throw new PasswordErrataException();
 
         $hash = password_hash($nuova_password, HASHING_ALGORITHM);
 
@@ -1312,13 +1312,13 @@
      * @throws PasswordErrataException se la vecchia password è errata
      */
     function setBibliotecarioPassword(string $id_bibliotecario, string $vecchia_password, string $nuova_password): void {
+        $hash = getBibliotecarioById($id_bibliotecario)["hash"];
+        if (!password_verify($vecchia_password, $hash))
+            throw new PasswordErrataException();
+
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
             throw new ErroreInternoDatabaseException();
-
-        $password = getBibliotecarioById($id_bibliotecario)["password"];
-        if (!password_verify($vecchia_password, $password))
-            throw new PasswordErrataException();
 
         $hash = password_hash($nuova_password, HASHING_ALGORITHM);
 
@@ -1382,11 +1382,11 @@
 
         if ($utente == Utente::BIBLIOTECARIO) {
             $bibliotecario = getBibliotecarioByEmail($email);
-            $hash = $bibliotecario['password'];
+            $hash = $bibliotecario['hash'];
             $id = $bibliotecario['id'];
         } else if ($utente == Utente::LETTORE) {
             $lettore = getLettoreByEmail($email);
-            $hash = $lettore['password'];
+            $hash = $lettore['hash'];
             $id = $lettore['codice_fiscale'];
         }
 

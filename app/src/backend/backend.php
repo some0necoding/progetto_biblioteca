@@ -1408,6 +1408,7 @@
      *
      * @param $utente il tipo di utente (lettore o bibliotecario)
      * @return true se l'utente è loggato, false altrimenti
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
      */
     function isLoggedIn(Utente $utente): bool {
         if (!isset($_SESSION['user_id']))
@@ -1416,8 +1417,14 @@
         $id = $_SESSION['user_id'];
         if ($utente == Utente::BIBLIOTECARIO)
             $user = getBibliotecarioById($id);
-        else if ($utente == Utente::LETTORE)
-            $user = getLettoreByCodiceFiscale($id);
+        else if ($utente == Utente::LETTORE) {
+            try {
+                $codice_fiscale = new CodiceFiscale($id);
+                $user = getLettoreByCodiceFiscale($id);
+            } catch (InvalidCodiceFiscaleException $e) {
+                return false;
+            }
+        }
 
         // controlla se l'utente è valido
         if (!empty($user))

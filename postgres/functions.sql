@@ -420,7 +420,7 @@ BEGIN
     ELSE
         SELECT copia.id INTO copiaTrovata
         FROM biblioteca.copia
-        WHERE copia.libro = getCopiaDisponibile.isbn AND;
+        WHERE copia.libro = getCopiaDisponibile.isbn AND
               copia.isDisponibile;
     END IF;
 

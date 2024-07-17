@@ -131,21 +131,21 @@
          *               Formato: [ 'nome', 'cognome', 'biografia', 'data_di_nascita', 'data_di_morte' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['nome']) || empty(parent::$inputs['nome']))
-                parent::$errors['nome'] = 'Il nome è obbligatorio';
-            if (!isset(parent::$inputs['cognome']) || empty(parent::$inputs['cognome']))
-                parent::$errors['cognome'] = 'Il cognome è obbligatorio';
-            if (!isset(parent::$inputs['data_di_nascita']) || empty(parent::$inputs['data_di_nascita']))
-                parent::$errors['data_di_nascita'] = 'La data di nascita è obbligatoria';
+            if (!isset($this->inputs['nome']) || empty($this->inputs['nome']))
+                $this->errors['nome'] = 'Il nome è obbligatorio';
+            if (!isset($this->inputs['cognome']) || empty($this->inputs['cognome']))
+                $this->errors['cognome'] = 'Il cognome è obbligatorio';
+            if (!isset($this->inputs['data_di_nascita']) || empty($this->inputs['data_di_nascita']))
+                $this->errors['data_di_nascita'] = 'La data di nascita è obbligatoria';
 
-            if (empty(parent::$errors))
-                aggiungiAutore(parent::$inputs['nome'],
-                               parent::$inputs['cognome'],
-                               parent::$inputs['biografia'],
-                               parent::$inputs['data_di_nascita'],
-                               parent::$inputs['data_di_morte']);
+            if (empty($this->errors))
+                aggiungiAutore($this->inputs['nome'],
+                               $this->inputs['cognome'],
+                               $this->inputs['biografia'],
+                               $this->inputs['data_di_nascita'],
+                               $this->inputs['data_di_morte']);
 
-            return parent::$errors;
+            return $this->errors;
         } 
     }
 
@@ -171,15 +171,15 @@
          *               Formato: [ 'id', 'data_di_morte' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['id']) || empty(parent::$inputs['id']))
-                parent::$errors['id'] = 'L\'id è obbligatorio';
-            if (!isset(parent::$inputs['data_di_morte']) || empty(parent::$inputs['data_di_morte']))
-                parent::$errors['data_di_morte'] = 'La data di morte è obbligatoria';
+            if (!isset($this->inputs['id']) || empty($this->inputs['id']))
+                $this->errors['id'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['data_di_morte']) || empty($this->inputs['data_di_morte']))
+                $this->errors['data_di_morte'] = 'La data di morte è obbligatoria';
 
-            if (empty(parent::$errors))
-                setAutoreDataDiMorte(parent::$inputs['id'], parent::$inputs['data_di_morte']);
+            if (empty($this->errors))
+                setAutoreDataDiMorte($this->inputs['id'], $this->inputs['data_di_morte']);
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -205,18 +205,18 @@
          *               Formato: [ 'id' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['id']) || empty(parent::$inputs['id']))
-                parent::$errors['id'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['id']) || empty($this->inputs['id']))
+                $this->errors['id'] = 'L\'id è obbligatorio';
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    rimuoviAutore(parent::$inputs['id']);
+                    rimuoviAutore($this->inputs['id']);
                 } catch (LibriAssociatiAdAutoreException $e) {
-                    parent::$errors['message'] = 'Impossibile rimuovere un autore con libri associati';
+                    $this->errors['message'] = 'Impossibile rimuovere un autore con libri associati';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -242,36 +242,36 @@
          *               Formato: [ 'titolo', 'isbn', 'trama', 'casa_editrice', 'autori' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['titolo']) || empty(parent::$inputs['titolo']))
-                parent::$errors['titolo'] = 'Il titolo è obbligatorio';
-            if (!isset(parent::$inputs['isbn']) || empty(parent::$inputs['isbn']))
-                parent::$errors['isbn'] = 'L\'isbn è obbligatorio';
-            if (!isset(parent::$inputs['trama']))
-                parent::$inputs['trama'] = '';
-            if (!isset(parent::$inputs['casa_editrice']) || empty(parent::$inputs['casa_editrice']))
-                parent::$errors['casa_editrice'] = 'La casa editrice è obbligatoria';
-            if (!isset(parent::$inputs['autori']) || empty(parent::$inputs['autori']))
-                parent::$errors['autori'] = 'Gli autori sono obbligatori';
+            if (!isset($this->inputs['titolo']) || empty($this->inputs['titolo']))
+                $this->errors['titolo'] = 'Il titolo è obbligatorio';
+            if (!isset($this->inputs['isbn']) || empty($this->inputs['isbn']))
+                $this->errors['isbn'] = 'L\'isbn è obbligatorio';
+            if (!isset($this->inputs['trama']))
+                $this->inputs['trama'] = '';
+            if (!isset($this->inputs['casa_editrice']) || empty($this->inputs['casa_editrice']))
+                $this->errors['casa_editrice'] = 'La casa editrice è obbligatoria';
+            if (!isset($this->inputs['autori']) || empty($this->inputs['autori']))
+                $this->errors['autori'] = 'Gli autori sono obbligatori';
 
             try {
-                parent::$inputs['isbn'] = new Isbn(parent::$inputs['isbn']);
+                $this->inputs['isbn'] = new Isbn($this->inputs['isbn']);
             } catch (InvalidIsbnException $e) {
-                parent::$errors['isbn'] = 'Isbn non valido';
+                $this->errors['isbn'] = 'Isbn non valido';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    aggiungiLibro(parent::$inputs['titolo'],
-                                  parent::$inputs['isbn'],
-                                  parent::$inputs['trama'],
-                                  parent::$inputs['casa_editrice'],
-                                  parent::$inputs['autori']);
+                    aggiungiLibro($this->inputs['isbn'],
+                                  $this->inputs['titolo'],
+                                  $this->inputs['trama'],
+                                  $this->inputs['casa_editrice'],
+                                  $this->inputs['autori']);
                 } catch (IsbnGiàEsistenteException $e) {
-                    parent::$errors['isbn'] = 'Isbn già esistente';
+                    $this->errors['isbn'] = 'Isbn già esistente';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -297,24 +297,24 @@
          *               Formato: [ 'isbn' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['isbn']) || empty(parent::$inputs['isbn']))
-                parent::$errors['isbn'] = 'L\'isbn è obbligatorio';
+            if (!isset($this->inputs['isbn']) || empty($this->inputs['isbn']))
+                $this->errors['isbn'] = 'L\'isbn è obbligatorio';
 
             try {
-                parent::$inputs['isbn'] = new Isbn(parent::$inputs['isbn']);
+                $this->inputs['isbn'] = new Isbn($this->inputs['isbn']);
             } catch (InvalidIsbnException $e) {
-                parent::$errors['isbn'] = 'Isbn non valido';
+                $this->errors['isbn'] = 'Isbn non valido';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    rimuoviLibro(parent::$inputs['isbn']);
+                    rimuoviLibro($this->inputs['isbn']);
                 } catch (CopieAssociateALibroException $e) {
-                    parent::$errors['message'] = 'Impossibile rimuovere un libro con copie associate';
+                    $this->errors['message'] = 'Impossibile rimuovere un libro con copie associate';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -340,15 +340,15 @@
          *               Formato: [ 'città', 'indirizzo' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['città']) || empty(parent::$inputs['città']))
-                parent::$errors['città'] = 'La città è obbligatoria';
-            if (!isset(parent::$inputs['indirizzo']) || empty(parent::$inputs['indirizzo']))
-                parent::$errors['indirizzo'] = 'L\'indirizzo è obbligatorio';
+            if (!isset($this->inputs['città']) || empty($this->inputs['città']))
+                $this->errors['città'] = 'La città è obbligatoria';
+            if (!isset($this->inputs['indirizzo']) || empty($this->inputs['indirizzo']))
+                $this->errors['indirizzo'] = 'L\'indirizzo è obbligatorio';
 
-            if (empty(parent::$errors))
-                aggiungiSede(parent::$inputs['nome'], parent::$inputs['indirizzo']);
+            if (empty($this->errors))
+                aggiungiSede($this->inputs['indirizzo'], $this->inputs['città']);
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -374,18 +374,18 @@
          *               Formato: [ 'id' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['id']) || empty(parent::$inputs['id']))
-                parent::$errors['id'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['id']) || empty($this->inputs['id']))
+                $this->errors['id'] = 'L\'id è obbligatorio';
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    rimuoviSede(parent::$inputs['id']);
+                    rimuoviSede($this->inputs['id']);
                 } catch (CopieAssociateASedeException $e) {
-                    parent::$errors['message'] = 'Impossibile rimuovere una sede con copie associate';
+                    $this->errors['message'] = 'Impossibile rimuovere una sede con copie associate';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -411,21 +411,21 @@
          *               Formato: [ 'libro', 'sede' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['libro']) || empty(parent::$inputs['libro']))
-                parent::$errors['libro'] = 'Il libro è obbligatorio';
-            if (!isset(parent::$inputs['sede']) || empty(parent::$inputs['sede']))
-                parent::$errors['sede'] = 'La sede è obbligatoria';
+            if (!isset($this->inputs['libro']) || empty($this->inputs['libro']))
+                $this->errors['libro'] = 'Il libro è obbligatorio';
+            if (!isset($this->inputs['sede']) || empty($this->inputs['sede']))
+                $this->errors['sede'] = 'La sede è obbligatoria';
 
             try {
-                parent::$inputs['libro'] = new Isbn(parent::$inputs['libro']);
+                $this->inputs['libro'] = new Isbn($this->inputs['libro']);
             } catch (InvalidIsbnException $e) {
-                parent::$errors['libro'] = 'Isbn non valido';
+                $this->errors['libro'] = 'Isbn non valido';
             }
 
-            if (empty(parent::$errors))
-                aggiungiCopia(parent::$inputs['libro'], parent::$inputs['sede']);
+            if (empty($this->errors))
+                aggiungiCopia($this->inputs['libro'], $this->inputs['sede']);
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -451,20 +451,20 @@
          *               Formato: [ 'id', 'sede' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['id']) || empty(parent::$inputs['id']))
-                parent::$errors['id'] = 'L\'id è obbligatorio';
-            if (!isset(parent::$inputs['sede']) || empty(parent::$inputs['sede']))
-                parent::$errors['sede'] = 'La sede è obbligatoria';
+            if (!isset($this->inputs['id']) || empty($this->inputs['id']))
+                $this->errors['id'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['sede']) || empty($this->inputs['sede']))
+                $this->errors['sede'] = 'La sede è obbligatoria';
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    setSede(parent::$inputs['id'], parent::$inputs['sede']);
+                    setSede($this->inputs['id'], $this->inputs['sede']);
                 } catch (CopiaInPrestitoException $e) {
-                    parent::$errors['message'] = 'Impossibile cambiare sede a una copia in prestito';
+                    $this->errors['message'] = 'Impossibile cambiare sede a una copia in prestito';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -490,18 +490,18 @@
          *               Formato: [ 'id' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['id']) || empty(parent::$inputs['id']))
-                parent::$errors['id'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['id']) || empty($this->inputs['id']))
+                $this->errors['id'] = 'L\'id è obbligatorio';
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    rimuoviCopia(parent::$inputs['id']);
+                    rimuoviCopia($this->inputs['id']);
                 } catch (CopiaInPrestitoException $e) {
-                    parent::$errors['message'] = 'Impossibile rimuovere una copia in prestito';
+                    $this->errors['message'] = 'Impossibile rimuovere una copia in prestito';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -527,32 +527,32 @@
          *               Formato: [ 'email', 'password1', 'password2 ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['email']) || empty(parent::$inputs['email']))
-                parent::$errors['email'] = 'L\'email è obbligatoria';
-            if (!isset(parent::$inputs['password1']) || empty(parent::$inputs['password1']))
-                parent::$errors['password1'] = 'La password è obbligatoria';
-            if (!isset(parent::$inputs['password2']) || empty(parent::$inputs['password2']))
-                parent::$errors['password2'] = 'La conferma della password è obbligatoria';
-            if (parent::$inputs['password1'] !== parent::$inputs['password2']) {
-                parent::$errors['password1'] = 'Le password non coincidono';
-                parent::$errors['password2'] = '';
+            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                $this->errors['email'] = 'L\'email è obbligatoria';
+            if (!isset($this->inputs['password1']) || empty($this->inputs['password1']))
+                $this->errors['password1'] = 'La password è obbligatoria';
+            if (!isset($this->inputs['password2']) || empty($this->inputs['password2']))
+                $this->errors['password2'] = 'La conferma della password è obbligatoria';
+            if ($this->inputs['password1'] !== $this->inputs['password2']) {
+                $this->errors['password1'] = 'Le password non coincidono';
+                $this->errors['password2'] = '';
             }
 
             try {
-                parent::$inputs['email'] = new Email(parent::$inputs['email']);
+                $this->inputs['email'] = new Email($this->inputs['email']);
             } catch (InvalidEmailException $e) {
-                parent::$errors['email'] = 'Email non valida';
+                $this->errors['email'] = 'Email non valida';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    aggiungiBibliotecario(parent::$inputs['email'], parent::$inputs['password1']);
+                    aggiungiBibliotecario($this->inputs['email'], $this->inputs['password1']);
                 } catch (BibliotecarioGiàRegistratoException $e) {
-                    parent::$errors['email'] = 'Email già registrata';
+                    $this->errors['email'] = 'Email già registrata';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -578,26 +578,26 @@
          *               Formato: [ 'id', 'email' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['id']) || empty(parent::$inputs['id']))
-                parent::$errors['id'] = 'L\'id è obbligatorio';
-            if (!isset(parent::$inputs['email']) || empty(parent::$inputs['email']))
-                parent::$errors['email'] = 'L\'email è obbligatoria';
+            if (!isset($this->inputs['id']) || empty($this->inputs['id']))
+                $this->errors['id'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                $this->errors['email'] = 'L\'email è obbligatoria';
 
             try {
-                parent::$inputs['email'] = new Email(parent::$inputs['email']);
+                $this->inputs['email'] = new Email($this->inputs['email']);
             } catch (InvalidEmailException $e) {
-                parent::$errors['email'] = 'Email non valida';
+                $this->errors['email'] = 'Email non valida';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    setBibliotecarioEmail(parent::$inputs['id'], parent::$inputs['email']);
+                    setBibliotecarioEmail($this->inputs['id'], $this->inputs['email']);
                 } catch (BibliotecarioGiàRegistratoException $e) {
-                    parent::$errors['email'] = 'Email già registrata';
+                    $this->errors['email'] = 'Email già registrata';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -623,28 +623,28 @@
          *               Formato: [ 'id', 'vecchia_password', 'password1', 'password2' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['id']) || empty(parent::$inputs['id']))
-                parent::$errors['id'] = 'L\'id è obbligatorio';
-            if (!isset(parent::$inputs['vecchia_password']) || empty(parent::$inputs['vecchia_password']))
-                parent::$errors['vecchia_password'] = 'Inserisci la vecchia password';
-            if (!isset(parent::$inputs['password1']) || empty(parent::$inputs['password1']))
-                parent::$errors['password1'] = 'La password è obbligatoria';
-            if (!isset(parent::$inputs['password2']) || empty(parent::$inputs['password2']))
-                parent::$errors['password2'] = 'La conferma della password è obbligatoria';
-            if (parent::$inputs['password1'] !== parent::$inputs['password2']) {
-                parent::$errors['password1'] = 'Le password non coincidono';
-                parent::$errors['password2'] = '';
+            if (!isset($this->inputs['id']) || empty($this->inputs['id']))
+                $this->errors['id'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['vecchia_password']) || empty($this->inputs['vecchia_password']))
+                $this->errors['vecchia_password'] = 'Inserisci la vecchia password';
+            if (!isset($this->inputs['password1']) || empty($this->inputs['password1']))
+                $this->errors['password1'] = 'La password è obbligatoria';
+            if (!isset($this->inputs['password2']) || empty($this->inputs['password2']))
+                $this->errors['password2'] = 'La conferma della password è obbligatoria';
+            if ($this->inputs['password1'] !== $this->inputs['password2']) {
+                $this->errors['password1'] = 'Le password non coincidono';
+                $this->errors['password2'] = '';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    setBibliotecarioPassword(parent::$inputs['id'], parent::$inputs['vecchia_password'], parent::$inputs['password1']);
+                    setBibliotecarioPassword($this->inputs['id'], $this->inputs['vecchia_password'], $this->inputs['password1']);
                 } catch (PasswordErrataException $e) {
-                    parent::$errors['vecchia_password'] = 'La vecchia password è errata';
+                    $this->errors['vecchia_password'] = 'La vecchia password è errata';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -670,15 +670,15 @@
          *               Formato: [ 'id' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['id']) || empty(parent::$inputs['id']))
-                parent::$errors['id'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['id']) || empty($this->inputs['id']))
+                $this->errors['id'] = 'L\'id è obbligatorio';
 
-                rimuoviBibliotecario(parent::$inputs['id']);
             if (empty($this->errors)) {
+                rimuoviBibliotecario($this->inputs['id']);
                 logout();
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -706,51 +706,51 @@
          *                          'email', 'categoria', 'password1', 'password2' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['codice_fiscale']) || empty(parent::$inputs['codice_fiscale']))
-                parent::$errors['codice_fiscale'] = 'Il codice fiscale è obbligatorio';
-            if (!isset(parent::$inputs['nome']) || empty(parent::$inputs['nome']))
-                parent::$errors['nome'] = 'Il nome è obbligatorio';
-            if (!isset(parent::$inputs['cognome']) || empty(parent::$inputs['cognome']))
-                parent::$errors['cognome'] = 'Il cognome è obbligatorio';
-            if (!isset(parent::$inputs['email']) || empty(parent::$inputs['email']))
-                parent::$errors['email'] = 'L\'email è obbligatoria';
-            if (!isset(parent::$inputs['password1']) || empty(parent::$inputs['password1']))
-                parent::$errors['password1'] = 'La password è obbligatoria';
-            if (!isset(parent::$inputs['password2']) || empty(parent::$inputs['password2']))
-                parent::$errors['password2'] = 'La conferma della password è obbligatoria';
-            if (parent::$inputs['password1'] !== parent::$inputs['password2']) {
-                parent::$errors['password1'] = 'Le password non coincidono';
-                parent::$errors['password2'] = '';
+            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                $this->errors['codice_fiscale'] = 'Il codice fiscale è obbligatorio';
+            if (!isset($this->inputs['nome']) || empty($this->inputs['nome']))
+                $this->errors['nome'] = 'Il nome è obbligatorio';
+            if (!isset($this->inputs['cognome']) || empty($this->inputs['cognome']))
+                $this->errors['cognome'] = 'Il cognome è obbligatorio';
+            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                $this->errors['email'] = 'L\'email è obbligatoria';
+            if (!isset($this->inputs['password1']) || empty($this->inputs['password1']))
+                $this->errors['password1'] = 'La password è obbligatoria';
+            if (!isset($this->inputs['password2']) || empty($this->inputs['password2']))
+                $this->errors['password2'] = 'La conferma della password è obbligatoria';
+            if ($this->inputs['password1'] !== $this->inputs['password2']) {
+                $this->errors['password1'] = 'Le password non coincidono';
+                $this->errors['password2'] = '';
             }
-            if (!isset(parent::$inputs['categoria']) || empty(parent::$inputs['categoria']))
-                parent::$errors['categoria'] = 'La categoria è obbligatoria';
+            if (!isset($this->inputs['categoria']) || empty($this->inputs['categoria']))
+                $this->errors['categoria'] = 'La categoria è obbligatoria';
 
             try {
-                parent::$inputs['codice_fiscale'] = new CodiceFiscale(parent::$inputs['codice_fiscale']);
-                parent::$inputs['categoria'] = Categoria::from(parent::$inputs['categoria']);
-                parent::$inputs['email'] = new Email(parent::$inputs['email']);
+                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
+                $this->inputs['categoria'] = Categoria::from($this->inputs['categoria']);
+                $this->inputs['email'] = new Email($this->inputs['email']);
             } catch (InvalidCodiceFiscaleException $e) {
-                parent::$errors['codice_fiscale'] = 'Codice fiscale non valido';
+                $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             } catch (InvalidEmailException $e) {
-                parent::$errors['email'] = 'Email non valida';
+                $this->errors['email'] = 'Email non valida';
             } catch (ValueError $e) {
-                parent::$errors['categoria'] = 'Categoria non valida';
+                $this->errors['categoria'] = 'Categoria non valida';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    aggiungiLettore(parent::$inputs['nome'],
-                                    parent::$inputs['cognome'],
-                                    parent::$inputs['email'],
-                                    parent::$inputs['categoria'],
-                                    parent::$inputs['codice_fiscale'],
-                                    parent::$inputs['password1']);
+                    aggiungiLettore($this->inputs['nome'],
+                                    $this->inputs['cognome'],
+                                    $this->inputs['email'],
+                                    $this->inputs['categoria'],
+                                    $this->inputs['codice_fiscale'],
+                                    $this->inputs['password1']);
                 } catch (LettoreGiàRegistratoException $e) {
-                    parent::$errors['email'] = 'Email già registrata';
+                    $this->errors['email'] = 'Email già registrata';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -776,29 +776,29 @@
          *               Formato: [ 'codice_fiscale', 'email' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['codice_fiscale']) || empty(parent::$inputs['codice_fiscale']))
-                parent::$errors['codice_fiscale'] = 'Il codice fiscale è obbligatorio';
-            if (!isset(parent::$inputs['email']) || empty(parent::$inputs['email']))
-                parent::$errors['email'] = 'L\'email è obbligatoria';
+            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                $this->errors['codice_fiscale'] = 'Il codice fiscale è obbligatorio';
+            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                $this->errors['email'] = 'L\'email è obbligatoria';
 
             try {
-                parent::$inputs['email'] = new Email(parent::$inputs['email']);
-                parent::$inputs['codice_fiscale'] = new CodiceFiscale(parent::$inputs['codice_fiscale']);
+                $this->inputs['email'] = new Email($this->inputs['email']);
+                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
             } catch (InvalidEmailException $e) {
-                parent::$errors['email'] = 'Email non valida';
+                $this->errors['email'] = 'Email non valida';
             } catch (InvalidCodiceFiscaleException $e) {
-                parent::$errors['codice_fiscale'] = 'Codice fiscale non valido';
+                $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    setLettoreEmail(parent::$inputs['codice_fiscale'], parent::$inputs['email']);
+                    setLettoreEmail($this->inputs['codice_fiscale'], $this->inputs['email']);
                 } catch (LettoreGiàRegistratoException $e) {
-                    parent::$errors['email'] = 'Email già registrata';
+                    $this->errors['email'] = 'Email già registrata';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -824,34 +824,34 @@
          *               Formato: [ 'codice_fiscale', 'vecchia_password', 'password1', 'password2' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['codice_fiscale']) || empty(parent::$inputs['codice_fiscale']))
-                parent::$errors['codice_fiscale'] = 'L\'id è obbligatorio';
-            if (!isset(parent::$inputs['vecchia_password']) || empty(parent::$inputs['vecchia_password']))
-                parent::$errors['vecchia_password'] = 'Inserisci la vecchia password';
-            if (!isset(parent::$inputs['password1']) || empty(parent::$inputs['password1']))
-                parent::$errors['password1'] = 'La password è obbligatoria';
-            if (!isset(parent::$inputs['password2']) || empty(parent::$inputs['password2']))
-                parent::$errors['password2'] = 'La conferma della password è obbligatoria';
-            if (parent::$inputs['password1'] !== parent::$inputs['password2']) {
-                parent::$errors['password1'] = 'Le password non coincidono';
-                parent::$errors['password2'] = '';
+            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['vecchia_password']) || empty($this->inputs['vecchia_password']))
+                $this->errors['vecchia_password'] = 'Inserisci la vecchia password';
+            if (!isset($this->inputs['password1']) || empty($this->inputs['password1']))
+                $this->errors['password1'] = 'La password è obbligatoria';
+            if (!isset($this->inputs['password2']) || empty($this->inputs['password2']))
+                $this->errors['password2'] = 'La conferma della password è obbligatoria';
+            if ($this->inputs['password1'] !== $this->inputs['password2']) {
+                $this->errors['password1'] = 'Le password non coincidono';
+                $this->errors['password2'] = '';
             }
 
             try {
-                parent::$inputs['codice_fiscale'] = new CodiceFiscale(parent::$inputs['codice_fiscale']);
+                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
             } catch (InvalidCodiceFiscaleException $e) {
-                parent::$errors['codice_fiscale'] = 'Codice fiscale non valido';
+                $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    setLettorePassword(parent::$inputs['codice_fiscale'], parent::$inputs['vecchia_password'], parent::$inputs['password1']);
+                    setLettorePassword($this->inputs['codice_fiscale'], $this->inputs['vecchia_password'], $this->inputs['password1']);
                 } catch (PasswordErrataException $e) {
-                    parent::$errors['vecchia_password'] = 'La vecchia password è errata';
+                    $this->errors['vecchia_password'] = 'La vecchia password è errata';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -877,24 +877,24 @@
          *               Formato: [ 'codice_fiscale', 'categoria' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['codice_fiscale']) || empty(parent::$inputs['codice_fiscale']))
-                parent::$errors['codice_fiscale'] = 'L\'id è obbligatorio';
-            if (!isset(parent::$inputs['categoria']) || empty(parent::$inputs['categoria']))
-                parent::$errors['categoria'] = 'La categoria è obbligatoria';
+            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['categoria']) || empty($this->inputs['categoria']))
+                $this->errors['categoria'] = 'La categoria è obbligatoria';
 
             try {
-                parent::$inputs['categoria'] = Categoria::from(parent::$inputs['categoria']);
-                parent::$inputs['codice_fiscale'] = new CodiceFiscale(parent::$inputs['codice_fiscale']);
+                $this->inputs['categoria'] = Categoria::from($this->inputs['categoria']);
+                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
             } catch (ValueError $e) {
-                parent::$errors['categoria'] = 'Categoria non valida';
+                $this->errors['categoria'] = 'Categoria non valida';
             } catch (InvalidCodiceFiscaleException $e) {
-                parent::$errors['codice_fiscale'] = 'Codice fiscale non valido';
+                $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             }
 
-            if (empty(parent::$errors))
-                setLettoreCategoria(parent::$inputs['codice_fiscale'], parent::$inputs['categoria']);
+            if (empty($this->errors))
+                setLettoreCategoria($this->inputs['codice_fiscale'], $this->inputs['categoria']);
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -920,19 +920,19 @@
          *               Formato: [ 'codice_fiscale' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['codice_fiscale']) || empty(parent::$inputs['codice_fiscale']))
-                parent::$errors['codice_fiscale'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
 
             try {
-                parent::$inputs['codice_fiscale'] = new CodiceFiscale(parent::$inputs['codice_fiscale']);
+                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
             } catch (InvalidCodiceFiscaleException $e) {
-                parent::$errors['codice_fiscale'] = 'Codice fiscale non valido';
+                $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             }
 
-            if (empty(parent::$errors))
-                azzeraRitardi(parent::$inputs['codice_fiscale']);
+            if (empty($this->errors))
+                azzeraRitardi($this->inputs['codice_fiscale']);
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -958,24 +958,24 @@
          *               Formato: [ 'codice_fiscale' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['codice_fiscale']) || empty(parent::$inputs['codice_fiscale']))
-                parent::$errors['codice_fiscale'] = 'L\'id è obbligatorio';
+            if (!isset($this->inputs['codice_fiscale']) || empty($this->inputs['codice_fiscale']))
+                $this->errors['codice_fiscale'] = 'L\'id è obbligatorio';
 
             try {
-                parent::$inputs['codice_fiscale'] = new CodiceFiscale(parent::$inputs['codice_fiscale']);
+                $this->inputs['codice_fiscale'] = new CodiceFiscale($this->inputs['codice_fiscale']);
             } catch (InvalidCodiceFiscaleException $e) {
-                parent::$errors['codice_fiscale'] = 'Codice fiscale non valido';
+                $this->errors['codice_fiscale'] = 'Codice fiscale non valido';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    rimuoviLettore(parent::$inputs['codice_fiscale']);
+                    rimuoviLettore($this->inputs['codice_fiscale']);
                 } catch (LettorePrestitiInCorsoException $e) {
-                    parent::$errors['message'] = 'Impossibile rimuovere un lettore con prestiti in corso';
+                    $this->errors['message'] = 'Impossibile rimuovere un lettore con prestiti in corso';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -1001,39 +1001,39 @@
          *               Formato: [ 'libro', 'sede', 'lettore' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['libro']) || empty(parent::$inputs['libro']))
-                parent::$errors['libro'] = 'Il libro è obbligatorio';
-            if (!isset(parent::$inputs['sede']) || empty(parent::$inputs['sede']))
-                parent::$errors['sede'] = null;
-            if (!isset(parent::$inputs['lettore']) || empty(parent::$inputs['lettore']))
-                parent::$errors['lettore'] = 'Il lettore è obbligatorio';
+            if (!isset($this->inputs['libro']) || empty($this->inputs['libro']))
+                $this->errors['libro'] = 'Il libro è obbligatorio';
+            if (!isset($this->inputs['sede']) || empty($this->inputs['sede']))
+                $this->errors['sede'] = null;
+            if (!isset($this->inputs['lettore']) || empty($this->inputs['lettore']))
+                $this->errors['lettore'] = 'Il lettore è obbligatorio';
 
             try {
-                parent::$inputs['libro'] = new Isbn(parent::$inputs['libro']);
-                parent::$inputs['lettore'] = new CodiceFiscale(parent::$inputs['lettore']);
+                $this->inputs['libro'] = new Isbn($this->inputs['libro']);
+                $this->inputs['lettore'] = new CodiceFiscale($this->inputs['lettore']);
             } catch (InvalidIsbnException $e) {
-                parent::$errors['libro'] = 'Isbn non valido';
+                $this->errors['libro'] = 'Isbn non valido';
             } catch (InvalidCodiceFiscaleException $e) {
-                parent::$errors['lettore'] = 'Codice fiscale non valido';
+                $this->errors['lettore'] = 'Codice fiscale non valido';
             }
 
             try {
-                $id_copia = getCopiaDisponibile(parent::$inputs['libro'], parent::$inputs['sede']);
+                $id_copia = getCopiaDisponibile($this->inputs['libro'], $this->inputs['sede']);
             } catch (CopiaNonDisponibileException $e) {
-                parent::$errors['message'] = 'Nessuna copia disponibile';
+                $this->errors['message'] = 'Nessuna copia disponibile';
             }
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    richiediPrestito($id_copia, parent::$inputs['lettore']);
+                    richiediPrestito($id_copia, $this->inputs['lettore']);
                 } catch (TroppiPrestitiInCorsoException $e) {
-                    parent::$errors['message'] = 'Hai troppi prestiti in corso';
+                    $this->errors['message'] = 'Hai troppi prestiti in corso';
                 } catch (TroppeConsegneInRitardoException $e) {
-                    parent::$errors['message'] = 'Hai troppe consegne in ritardo';
+                    $this->errors['message'] = 'Hai troppe consegne in ritardo';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -1059,13 +1059,13 @@
          *               Formato: [ 'copia' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['copia']) || empty(parent::$inputs['copia']))
-                parent::$errors['copia'] = 'La copia è obbligatoria';
+            if (!isset($this->inputs['copia']) || empty($this->inputs['copia']))
+                $this->errors['copia'] = 'La copia è obbligatoria';
 
-            if (empty(parent::$errors))
-                restituisciPrestito(parent::$inputs['copia']);
+            if (empty($this->errors))
+                restituisciPrestito($this->inputs['copia']);
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 
@@ -1091,20 +1091,20 @@
          *               Formato: [ 'copia', 'giorni_di_proroga' ]
          */
         public function esegui(): array {
-            if (!isset(parent::$inputs['copia']) || empty(parent::$inputs['copia']))
-                parent::$errors['copia'] = 'La copia è obbligatoria';
-            if (!isset(parent::$inputs['giorni_di_proroga']) || empty(parent::$inputs['giorni_di_proroga']))
-                parent::$errors['giorni_di_proroga'] = 'Inserisci di quanti giorni vuoi prorogare il prestito';
+            if (!isset($this->inputs['copia']) || empty($this->inputs['copia']))
+                $this->errors['copia'] = 'La copia è obbligatoria';
+            if (!isset($this->inputs['giorni_di_proroga']) || empty($this->inputs['giorni_di_proroga']))
+                $this->errors['giorni_di_proroga'] = 'Inserisci di quanti giorni vuoi prorogare il prestito';
 
-            if (empty(parent::$errors)) {
+            if (empty($this->errors)) {
                 try {
-                    prorogaPrestito(parent::$inputs['copia'], parent::$inputs['giorni_di_proroga']);
+                    prorogaPrestito($this->inputs['copia'], $this->inputs['giorni_di_proroga']);
                 } catch (PrestitoInRitardoException $e) {
-                    parent::$errors['message'] = 'Il prestito è già in ritardo';
+                    $this->errors['message'] = 'Il prestito è già in ritardo';
                 }
             }
 
-            return parent::$errors;
+            return $this->errors;
         }
     }
 

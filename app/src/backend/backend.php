@@ -1420,7 +1420,7 @@
         else if ($utente == Utente::LETTORE) {
             try {
                 $codice_fiscale = new CodiceFiscale($id);
-                $user = getLettoreByCodiceFiscale($id);
+                $user = getLettoreByCodiceFiscale($codice_fiscale);
             } catch (InvalidCodiceFiscaleException $e) {
                 return false;
             }

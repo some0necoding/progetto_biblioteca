@@ -17,7 +17,7 @@
         case AGGIUNGI_BIBLIOTECARIO = 11;
         case CAMBIA_EMAIL_BIBLIOTECARIO = 12;
         case CAMBIA_PASSWORD_BIBLIOTECARIO = 13;
-        case RIMUOVI_BIBLIOTECARIO = 14;
+        case ELIMINA_ACCOUNT_BIBLIOTECARIO = 14;
         case AGGIUNGI_LETTORE = 15;
         case CAMBIA_EMAIL_LETTORE = 16;
         case CAMBIA_PASSWORD_LETTORE = 17;
@@ -29,30 +29,30 @@
         case PROROGA_PRESTITO = 23;
     }
 
-    $operazioni = [
-        TipoOperazione::AGGIUNGI_AUTORE               => 'AggiungiAutore',
-        TipoOperazione::SET_DATA_DI_MORTE_AUTORE      => 'SetDataDiMorteAutore',
-        TipoOperazione::RIMUOVI_AUTORE                => 'RimuoviAutore',
-        TipoOperazione::AGGIUNGI_LIBRO                => 'AggiungiLibro',
-        TipoOperazione::RIMUOVI_LIBRO                 => 'RimuoviLibro',
-        TipoOperazione::AGGIUNGI_SEDE                 => 'AggiungiSede',
-        TipoOperazione::RIMUOVI_SEDE                  => 'RimuoviSede',
-        TipoOperazione::AGGIUNGI_COPIA                => 'AggiungiCopia',
-        TipoOperazione::CAMBIA_SEDE                   => 'CambiaSede',
-        TipoOperazione::RIMUOVI_COPIA                 => 'RimuoviCopia',
-        TipoOperazione::AGGIUNGI_BIBLIOTECARIO        => 'AggiungiBibliotecario',
-        TipoOperazione::CAMBIA_EMAIL_BIBLIOTECARIO    => 'CambiaEmailBibliotecario',
-        TipoOperazione::CAMBIA_PASSWORD_BIBLIOTECARIO => 'CambiaPasswordBibliotecario',
-        TipoOperazione::RIMUOVI_BIBLIOTECARIO         => 'RimuoviBibliotecario',
-        TipoOperazione::AGGIUNGI_LETTORE              => 'AggiungiLettore',
-        TipoOperazione::CAMBIA_EMAIL_LETTORE          => 'CambiaEmailLettore',
-        TipoOperazione::CAMBIA_PASSWORD_LETTORE       => 'CambiaPasswordLettore',
-        TipoOperazione::CAMBIA_CATEGORIA_LETTORE      => 'CambiaCategoriaLettore',
-        TipoOperazione::AZZERA_RITARDI_LETTORE        => 'AzzeraRitardiLettore',
-        TipoOperazione::RIMUOVI_LETTORE               => 'RimuoviLettore',
-        TipoOperazione::RICHIEDI_PRESTITO             => 'RichiediPrestito',
-        TipoOperazione::RESTITUISCI_PRESTITO          => 'RestituisciPrestito',
-        TipoOperazione::PROROGA_PRESTITO              => 'Proroga'
+    const OPERAZIONI = [
+        TipoOperazione::AGGIUNGI_AUTORE->value               => 'AggiungiAutore',
+        TipoOperazione::SET_DATA_DI_MORTE_AUTORE->value      => 'SetDataDiMorteAutore',
+        TipoOperazione::RIMUOVI_AUTORE->value                => 'RimuoviAutore',
+        TipoOperazione::AGGIUNGI_LIBRO->value                => 'AggiungiLibro',
+        TipoOperazione::RIMUOVI_LIBRO->value                 => 'RimuoviLibro',
+        TipoOperazione::AGGIUNGI_SEDE->value                 => 'AggiungiSede',
+        TipoOperazione::RIMUOVI_SEDE->value                  => 'RimuoviSede',
+        TipoOperazione::AGGIUNGI_COPIA->value                => 'AggiungiCopia',
+        TipoOperazione::CAMBIA_SEDE->value                   => 'CambiaSede',
+        TipoOperazione::RIMUOVI_COPIA->value                 => 'RimuoviCopia',
+        TipoOperazione::AGGIUNGI_BIBLIOTECARIO->value        => 'AggiungiBibliotecario',
+        TipoOperazione::CAMBIA_EMAIL_BIBLIOTECARIO->value    => 'CambiaEmailBibliotecario',
+        TipoOperazione::CAMBIA_PASSWORD_BIBLIOTECARIO->value => 'CambiaPasswordBibliotecario',
+        TipoOperazione::ELIMINA_ACCOUNT_BIBLIOTECARIO->value => 'EliminaAccountBibliotecario',
+        TipoOperazione::AGGIUNGI_LETTORE->value              => 'AggiungiLettore',
+        TipoOperazione::CAMBIA_EMAIL_LETTORE->value          => 'CambiaEmailLettore',
+        TipoOperazione::CAMBIA_PASSWORD_LETTORE->value       => 'CambiaPasswordLettore',
+        TipoOperazione::CAMBIA_CATEGORIA_LETTORE->value      => 'CambiaCategoriaLettore',
+        TipoOperazione::AZZERA_RITARDI_LETTORE->value        => 'AzzeraRitardiLettore',
+        TipoOperazione::RIMUOVI_LETTORE->value               => 'RimuoviLettore',
+        TipoOperazione::RICHIEDI_PRESTITO->value             => 'RichiediPrestito',
+        TipoOperazione::RESTITUISCI_PRESTITO->value          => 'RestituisciPrestito',
+        TipoOperazione::PROROGA_PRESTITO->value              => 'Proroga',
     ];
 
     /**
@@ -649,9 +649,9 @@
     }
 
     /**
-     * Operazione di rimozione di un bibliotecario.
+     * Operazione di rimozione dell'account di un bibliotecario.
      */
-    class RimuoviBibliotecario extends Operazione {
+    class EliminaAccountBibliotecario extends Operazione {
 
         /**
          * Costruttore
@@ -673,8 +673,10 @@
             if (!isset(parent::$inputs['id']) || empty(parent::$inputs['id']))
                 parent::$errors['id'] = 'L\'id è obbligatorio';
 
-            if (empty(parent::$errors))
                 rimuoviBibliotecario(parent::$inputs['id']);
+            if (empty($this->errors)) {
+                logout();
+            }
 
             return parent::$errors;
         }

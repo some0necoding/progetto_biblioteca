@@ -851,7 +851,7 @@
         if (!is_null($error))
             throw $error;
 
-        setcookie("user_email", $nuova_email, time() + 3600, "/");
+        $_SESSION["user_email"] = $nuova_email->getEmail();
     }
 
     /**
@@ -1299,7 +1299,7 @@
         if (!is_null($error))
             throw $error;
 
-        setcookie('user_email', $nuova_email, time() + 3600, '/');
+        $_SESSION['user_email'] = $nuova_email->getEmail();
     }
 
     /**
@@ -1394,7 +1394,7 @@
             throw new PasswordErrataException();
 
         $_SESSION['user_id'] = $id;
-        $_SESSION['user_email'] = $email;
+        $_SESSION['user_email'] = $email->getEmail();
     }
 
     /**

@@ -133,4 +133,10 @@
             parent::__construct("Password errata");
         }
     }
+
+    class UtenteInesistenteException extends Exception {
+        public function __construct() {
+            parent::__construct("Utente inesistente");
+        }
+    }
 ?>

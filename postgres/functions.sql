@@ -415,11 +415,13 @@ BEGIN
         SELECT copia.id INTO copiaTrovata
         FROM biblioteca.copia
         WHERE copia.sede = getCopiaDisponibile.sede AND
-              copia.libro = getCopiaDisponibile.isbn;
+              copia.libro = getCopiaDisponibile.isbn AND
+              copia.isDisponibile;
     ELSE
         SELECT copia.id INTO copiaTrovata
         FROM biblioteca.copia
-        WHERE copia.libro = getCopiaDisponibile.isbn;
+        WHERE copia.libro = getCopiaDisponibile.isbn AND;
+              copia.isDisponibile;
     END IF;
 
     IF NOT FOUND THEN

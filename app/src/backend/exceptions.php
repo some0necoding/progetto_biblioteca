@@ -44,7 +44,7 @@
             if (!array_key_exists($error, self::$exceptions))
                 return null;
 
-            return new $self::$exceptions[$error];
+            return new self::$exceptions[$error];
         }
     }
 

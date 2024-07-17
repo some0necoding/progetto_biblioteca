@@ -1374,6 +1374,7 @@
      * @param $password la password dell'utente
      * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
      * @throws PasswordErrataException se la password è errata
+     * @throws UtenteInesistenteException se l'email non è registrata
      */
     function login(Utente $utente, Email $email, string $password): void {
         $conn = pg_connect(CONNECTION_STRING);
@@ -1382,10 +1383,14 @@
 
         if ($utente == Utente::BIBLIOTECARIO) {
             $bibliotecario = getBibliotecarioByEmail($email);
+            if (empty($bibliotecario))
+                throw new UtenteInesistenteException();
             $hash = $bibliotecario['hash'];
             $id = $bibliotecario['id'];
         } else if ($utente == Utente::LETTORE) {
             $lettore = getLettoreByEmail($email);
+            if (empty($lettore))
+                throw new UtenteInesistenteException();
             $hash = $lettore['hash'];
             $id = $lettore['codice_fiscale'];
         }

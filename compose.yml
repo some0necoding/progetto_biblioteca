@@ -1,0 +1,31 @@
+networks:
+    my-network:
+
+services:
+    nginx:
+        image: nginx:latest
+        ports:
+            - "3000:80"
+        volumes:
+            - ./app:/usr/share/nginx/html
+            - ./nginx/conf.d:/etc/nginx/conf.d
+        networks:
+            - my-network
+
+    php-fpm:
+        build:
+            context: ./app
+        volumes:
+            - ./app/public:/var/www/html/public
+            - ./app/src:/var/www/html/src
+        networks:
+            - my-network
+
+    postgres:
+        build:
+            context: ./postgres
+        environment:
+            POSTGRES_PASSWORD: weakpassword
+            POSTGRES_DB: biblioteca
+        networks:
+            - my-network

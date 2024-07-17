@@ -64,10 +64,10 @@
      */
     abstract class Operazione {
 
-        /** 
-         * Array che contiene gli input necessari per l'operazione. Ogni valore 
+        /**
+         * Array che contiene gli input necessari per l'operazione. Ogni valore
          * è identificato da una chiave analoga al nome del tag input da cui è
-         * stato estratto. Il formato specifico di questo array deve essere 
+         * stato estratto. Il formato specifico di questo array deve essere
          * definito dalle classi figlie.
          *
          * Esempio:
@@ -86,7 +86,7 @@
          *  - settato a stringa vuota:      evidenzia in rosso, senza messaggio;
          *  - settato a stringa non vuota:  evidenzia in rosso, con messaggio.
          *
-         * NOTA: possono esistere errori che non sono associati a nessun tag input: 
+         * NOTA: possono esistere errori che non sono associati a nessun tag input:
          * in questo caso verrà mostrato un messaggio senza evidenziare nessun campo.
          *
          * Esempio:
@@ -97,7 +97,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          */
         public function __construct(array $inputs) {
@@ -107,11 +107,11 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          */
         abstract public function esegui(): array;
-    } 
+    }
 
     /**
      * Operazione di aggiunta di un autore.
@@ -120,7 +120,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'nome', 'cognome', 'biografia', 'data_di_nascita', 'data_di_morte' ]
          */
@@ -130,7 +130,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'nome', 'cognome', 'biografia', 'data_di_nascita', 'data_di_morte' ]
          */
@@ -150,7 +150,7 @@
                                $this->inputs['data_di_morte']);
 
             return $this->errors;
-        } 
+        }
     }
 
     /**
@@ -160,7 +160,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'id', 'data_di_morte' ]
          */
@@ -170,7 +170,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'id', 'data_di_morte' ]
          */
@@ -194,7 +194,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'id' ]
          */
@@ -204,7 +204,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'id' ]
          */
@@ -231,7 +231,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'titolo', 'isbn', 'trama', 'casa_editrice', 'autori' ]
          */
@@ -241,7 +241,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'titolo', 'isbn', 'trama', 'casa_editrice', 'autori' ]
          */
@@ -286,7 +286,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'isbn' ]
          */
@@ -296,7 +296,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'isbn' ]
          */
@@ -329,7 +329,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'città', 'indirizzo' ]
          */
@@ -339,7 +339,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'città', 'indirizzo' ]
          */
@@ -363,7 +363,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'id' ]
          */
@@ -373,7 +373,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'id' ]
          */
@@ -395,12 +395,12 @@
 
     /**
      * Operazione di aggiunta di una copia.
-     */ 
+     */
     class AggiungiCopia extends Operazione {
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'libro', 'sede' ]
          */
@@ -410,7 +410,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'libro', 'sede' ]
          */
@@ -440,7 +440,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'id', 'sede' ]
          */
@@ -450,7 +450,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'id', 'sede' ]
          */
@@ -479,7 +479,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'id' ]
          */
@@ -489,7 +489,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'id' ]
          */
@@ -516,7 +516,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'email', 'password1', 'password2' ]
          */
@@ -526,7 +526,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'email', 'password1', 'password2 ]
          */
@@ -567,7 +567,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'id', 'email' ]
          */
@@ -577,7 +577,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'id', 'email' ]
          */
@@ -612,7 +612,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'id', 'vecchia_password', 'password1', 'password2' ]
          */
@@ -622,7 +622,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'id', 'vecchia_password', 'password1', 'password2' ]
          */
@@ -659,7 +659,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'id' ]
          */
@@ -669,7 +669,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'id' ]
          */
@@ -693,7 +693,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'codice_fiscale', 'nome', 'cognome',
          *                                 'email', 'categoria', 'password1', 'password2' ]
@@ -704,7 +704,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'codice_fiscale', 'nome', 'cognome',
          *                          'email', 'categoria', 'password1', 'password2' ]
@@ -765,7 +765,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'codice_fiscale', 'email' ]
          */
@@ -775,7 +775,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'codice_fiscale', 'email' ]
          */
@@ -813,7 +813,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'codice_fiscale', 'vecchia_password', 'password1', 'password2' ]
          */
@@ -823,7 +823,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'codice_fiscale', 'vecchia_password', 'password1', 'password2' ]
          */
@@ -866,7 +866,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'codice_fiscale', 'categoria' ]
          */
@@ -876,7 +876,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'codice_fiscale', 'categoria' ]
          */
@@ -909,7 +909,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'codice_fiscale' ]
          */
@@ -919,7 +919,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'codice_fiscale' ]
          */
@@ -947,7 +947,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'codice_fiscale' ]
          */
@@ -957,7 +957,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'codice_fiscale' ]
          */
@@ -990,7 +990,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'libro', 'sede', 'lettore' ]
          */
@@ -1000,7 +1000,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'libro', 'sede', 'lettore' ]
          */
@@ -1048,7 +1048,7 @@
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'copia' ]
          */
@@ -1058,7 +1058,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'copia' ]
          */
@@ -1075,12 +1075,12 @@
 
     /**
      * Operazione di proroga di un prestito.
-     */ 
+     */
     class ProrogaPrestito extends Operazione {
 
         /**
          * Costruttore
-         * 
+         *
          * @param array $inputs gli input necessari per l'operazione (@see $inputs)
          *                      Formato: [ 'copia', 'giorni_di_proroga' ]
          */
@@ -1090,7 +1090,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'copia', 'giorni_di_proroga' ]
          */
@@ -1129,7 +1129,7 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array contenente gli errori dell'operazione (@see $errors)
          *               Formato: [ 'utente', 'email', 'password' ]
          */
@@ -1154,7 +1154,7 @@
                 $this->errors['password'] = '';
             }
 
-            return $this->errors;  
+            return $this->errors;
         }
     }
 
@@ -1172,12 +1172,12 @@
 
         /**
          * Esegue l'operazione e ne restituisce gli errori.
-         * 
+         *
          * @return array array vuoto
          */
         public function esegui(): array {
             logout();
-            return $this->errors;  
+            return $this->errors;
         }
     }
 

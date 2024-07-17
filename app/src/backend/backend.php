@@ -54,7 +54,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getAutori()";
+        $query = "SELECT * FROM biblioteca.getAutori()";
         if (!pg_prepare($conn, "get_autori", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -85,7 +85,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getAutoreById($1)";
+        $query = "SELECT * FROM biblioteca.getAutoreById($1)";
         if (!pg_prepare($conn, "get_autore_by_id", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -215,7 +215,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getLibri()";
+        $query = "SELECT * FROM biblioteca.getLibri()";
         if (!pg_prepare($conn, "get_libri", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -246,7 +246,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getLibroByIsbn($1)";
+        $query = "SELECT * FROM biblioteca.getLibroByIsbn($1)";
         if (!pg_prepare($conn, "get_libro_by_isbn", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -277,7 +277,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getLibriBySede($1)";
+        $query = "SELECT * FROM biblioteca.getLibriBySede($1)";
         if (!pg_prepare($conn, "get_libri_by_sede", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -367,7 +367,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getSedi()";
+        $query = "SELECT * FROM biblioteca.getSedi()";
         if (!pg_prepare($conn, "get_sedi", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -398,7 +398,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getSedeById($1)";
+        $query = "SELECT * FROM biblioteca.getSedeById($1)";
         if (!pg_prepare($conn, "get_sede_by_id", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -429,7 +429,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getRitardi($1)";
+        $query = "SELECT * FROM biblioteca.getRitardi($1)";
         if (!pg_prepare($conn, "get_ritardi", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -519,7 +519,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getCopie()";
+        $query = "SELECT * FROM biblioteca.getCopie()";
         if (!pg_prepare($conn, "get_copie", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -550,7 +550,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getCopiaById($1)";
+        $query = "SELECT * FROM biblioteca.getCopiaById($1)";
         if (!pg_prepare($conn, "get_copia_by_id", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -583,7 +583,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getCopiaDisponibile($1, $2)";
+        $query = "SELECT * FROM biblioteca.getCopiaDisponibile($1, $2)";
         if (!pg_prepare($conn, "get_copia_disponibile", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -722,7 +722,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getLettori()";
+        $query = "SELECT * FROM biblioteca.getLettori()";
         if (!pg_prepare($conn, "get_lettori", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -753,7 +753,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getLettoreByCodiceFiscale($1)";
+        $query = "SELECT * FROM biblioteca.getLettoreByCodiceFiscale($1)";
         if (!pg_prepare($conn, "get_lettore_by_codice_fiscale", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -784,7 +784,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getLettoreByEmail($1)";
+        $query = "SELECT * FROM biblioteca.getLettoreByEmail($1)";
         if (!pg_prepare($conn, "get_lettore_by_email", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -1007,7 +1007,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getPrestiti()";
+        $query = "SELECT * FROM biblioteca.getPrestiti()";
         if (!pg_prepare($conn, "get_prestiti", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -1038,7 +1038,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getPrestitoByCopia($1)";
+        $query = "SELECT * FROM biblioteca.getPrestitoByCopia($1)";
         if (!pg_prepare($conn, "get_prestito_by_copia", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -1164,7 +1164,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getBibliotecari()";
+        $query = "SELECT * FROM biblioteca.getBibliotecari()";
         if (!pg_prepare($conn, "get_bibliotecari", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -1195,7 +1195,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getBibliotecarioById($1)";
+        $query = "SELECT * FROM biblioteca.getBibliotecarioById($1)";
         if (!pg_prepare($conn, "get_bibliotecario_by_id", $query))
             throw new ErroreInternoDatabaseException();
 
@@ -1226,7 +1226,7 @@
         if (!$conn)
             throw new ErroreInternoDatabaseException();
 
-        $query = "SELECT biblioteca.getBibliotecarioByEmail($1)";
+        $query = "SELECT * FROM biblioteca.getBibliotecarioByEmail($1)";
         if (!pg_prepare($conn, "get_bibliotecario_by_email", $query))
             throw new ErroreInternoDatabaseException();
 

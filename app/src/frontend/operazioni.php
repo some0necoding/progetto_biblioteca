@@ -27,6 +27,8 @@
         case RICHIEDI_PRESTITO = 21;
         case RESTITUISCI_PRESTITO = 22;
         case PROROGA_PRESTITO = 23;
+        case LOGIN = 24;
+        case LOGOUT = 25;
     }
 
     const OPERAZIONI = [
@@ -53,6 +55,8 @@
         TipoOperazione::RICHIEDI_PRESTITO->value             => 'RichiediPrestito',
         TipoOperazione::RESTITUISCI_PRESTITO->value          => 'RestituisciPrestito',
         TipoOperazione::PROROGA_PRESTITO->value              => 'Proroga',
+        TipoOperazione::LOGIN->value                         => 'Login',
+        TipoOperazione::LOGOUT->value                        => 'Logout'
     ];
 
     /**
@@ -1105,6 +1109,75 @@
             }
 
             return $this->errors;
+        }
+    }
+
+    /**
+     * Operazione di login
+     */
+    class Login extends Operazione {
+
+        /**
+         * Costruttore
+         *
+         * @param array $inputs gli input necessari per l'operazione (@see $inputs)
+         *                      Formato: [ 'utente', 'email', 'password' ]
+         */
+        public function __construct(array $inputs) {
+            parent::__construct($inputs);
+        }
+
+        /**
+         * Esegue l'operazione e ne restituisce gli errori.
+         * 
+         * @return array array contenente gli errori dell'operazione (@see $errors)
+         *               Formato: [ 'utente', 'email', 'password' ]
+         */
+        public function esegui(): array {
+            if (!isset($this->inputs['utente']) || empty($this->inputs['utente']))
+                $this->errors['utente'] = 'L\'utente è obbligatorio';
+            if (!isset($this->inputs['email']) || empty($this->inputs['email']))
+                $this->errors['email'] = 'L\'email è obbligatoria';
+            if (!isset($this->inputs['password']) || empty($this->inputs['password']))
+                $this->errors['password'] = 'La password è obbligatoria';
+
+            try {
+                $this->inputs['utente'] = Utente::from($this->inputs['utente']);
+                $this->inputs['email'] = new Email($this->inputs['email']);
+                login($this->inputs['utente'], $this->inputs['email'], $this->inputs['password']);
+            } catch (InvalidEmailException $e) {
+                $this->errors['email'] = 'Inserisci una mail valida';
+            } catch (ValueError $e) {
+                $this->errors['utente'] = 'Inserisci un utente valido';
+            } catch (PasswordErrataException | UtenteInesistenteException $e) {
+                $this->errors['email'] = 'Email o password sono errati';
+                $this->errors['password'] = '';
+            }
+
+            return $this->errors;  
+        }
+    }
+
+    /**
+     * Operazione di logout
+     */
+    class Logout extends Operazione {
+
+        /**
+         * Costruttore
+         */
+        public function __construct() {
+            parent::__construct([]);
+        }
+
+        /**
+         * Esegue l'operazione e ne restituisce gli errori.
+         * 
+         * @return array array vuoto
+         */
+        public function esegui(): array {
+            logout();
+            return $this->errors;  
         }
     }
 

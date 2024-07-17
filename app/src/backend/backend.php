@@ -2,11 +2,14 @@
     include_once 'exceptions.php';
     include_once 'objects.php';
 
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', 'postgres');
     define('DB_PORT', '5432');
     define('DB_NAME', 'biblioteca');
-    define('DB_USER', 'marco');
-    define('CONNECTION_STRING', "host=" . DB_HOST . " port=" . DB_PORT . " dbname=" . DB_NAME . " user=" . DB_USER);
+    define('DB_USER', 'postgres');
+    define('DB_PASSWORD', 'weakpassword');
+    define('CONNECTION_STRING', "host=" . DB_HOST . " port=" . DB_PORT .
+                               " dbname=" . DB_NAME . " user=" . DB_USER .
+                               " password=" . DB_PASSWORD);
 
     define('HASHING_ALGORITHM', PASSWORD_DEFAULT);
 

@@ -93,7 +93,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $autore = pg_fetch_row($result);
+        $autore = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -151,7 +151,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        [$error] = pg_fetch_row($result);
+        [$error] = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -191,7 +191,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        [$error] = pg_fetch_row($result);
+        [$error] = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -254,7 +254,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $libro = pg_fetch_row($result);
+        $libro = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -316,7 +316,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        [$error] = pg_fetch_row($result);
+        [$error] = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -406,7 +406,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $sede = pg_fetch_row($result);
+        $sede = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -468,7 +468,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        [$error] = pg_fetch_row($result);
+        [$error] = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -558,7 +558,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $copia = pg_fetch_row($result);
+        $copia = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -591,7 +591,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $copia = pg_fetch_row($result);
+        $copia = pg_fetch_array($result);
         if (is_null($copia))
             throw new CopiaNonDisponibileException();
 
@@ -761,7 +761,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $lettore = pg_fetch_row($result);
+        $lettore = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -792,7 +792,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $lettore = pg_fetch_row($result);
+        $lettore = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -824,7 +824,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        [$error] = pg_fetch_row($result);
+        [$error] = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -1046,7 +1046,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $prestito = pg_fetch_row($result);
+        $prestito = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -1140,7 +1140,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        [$error] = pg_fetch_row($result);
+        [$error] = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -1203,7 +1203,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $bibliotecario = pg_fetch_row($result);
+        $bibliotecario = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();
@@ -1234,7 +1234,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $bibliotecario = pg_fetch_row($result);
+        $bibliotecario = pg_fetch_array($result);
 
         if (!pg_free_result($result))
             throw new ErroreInternoDatabaseException();

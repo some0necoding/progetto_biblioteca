@@ -84,14 +84,14 @@ SELECT biblioteca.aggiungiLibro(
 
 -- SEDI --
 
-INSERT INTO biblioteca.sede (id, nome, indirizzo)
+INSERT INTO biblioteca.sede (id, indirizzo, città)
 VALUES (
     1,
     'Via Celoria, 18',
     'Milano'
 );
 
-INSERT INTO biblioteca.sede (id, nome, indirizzo)
+INSERT INTO biblioteca.sede (id, indirizzo, città)
 VALUES (
     2,
     'Corso di Porta Vittoria, 6',

@@ -23,7 +23,7 @@
         case CAMBIA_PASSWORD_LETTORE = 17;
         case CAMBIA_CATEGORIA_LETTORE = 18;
         case AZZERA_RITARDI_LETTORE = 19;
-        case RIMUOVI_LETTORE = 20;
+        case ELIMINA_ACCOUNT_LETTORE = 20;
         case RICHIEDI_PRESTITO = 21;
         case RESTITUISCI_PRESTITO = 22;
         case PROROGA_PRESTITO = 23;
@@ -51,7 +51,7 @@
         TipoOperazione::CAMBIA_PASSWORD_LETTORE->value       => 'CambiaPasswordLettore',
         TipoOperazione::CAMBIA_CATEGORIA_LETTORE->value      => 'CambiaCategoriaLettore',
         TipoOperazione::AZZERA_RITARDI_LETTORE->value        => 'AzzeraRitardiLettore',
-        TipoOperazione::RIMUOVI_LETTORE->value               => 'RimuoviLettore',
+        TipoOperazione::ELIMINA_ACCOUNT_LETTORE->value       => 'EliminaAccountLettore',
         TipoOperazione::RICHIEDI_PRESTITO->value             => 'RichiediPrestito',
         TipoOperazione::RESTITUISCI_PRESTITO->value          => 'RestituisciPrestito',
         TipoOperazione::PROROGA_PRESTITO->value              => 'Proroga',
@@ -958,7 +958,7 @@
     /**
      * Operazione di rimozione di un lettore.
      */
-    class RimuoviLettore extends Operazione {
+    class EliminaAccountLettore extends Operazione {
 
         /**
          * Costruttore
@@ -989,6 +989,7 @@
             if (empty($this->errors)) {
                 try {
                     rimuoviLettore($this->inputs['codice_fiscale']);
+                    logout();
                 } catch (LettorePrestitiInCorsoException $e) {
                     $this->errors['message'] = 'Impossibile rimuovere un lettore con prestiti in corso';
                 }

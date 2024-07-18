@@ -52,7 +52,6 @@ CREATE TABLE biblioteca.sede (
  - `aggiungiSede(indirizzo, città)`
  - `getSedi()`
  - `getSedeById(id)`
- - `getRitardi(id)`: genera un report dei ritardi
  - `rimuoviSede(id)`
 
 ## Copia

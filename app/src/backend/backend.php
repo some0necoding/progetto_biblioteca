@@ -278,7 +278,7 @@
      * @return un array contenente i dati del libro
      * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
      */
-    function getLibroByIsbn(string $isbn): array {
+    function getLibroByIsbn(Isbn $isbn): array {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
             throw new ErroreInternoDatabaseException();
@@ -342,7 +342,7 @@
      * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
      * @throws CopieAssociateALibroException se ci sono copie associate al libro
      */
-    function rimuoviLibro(string $isbn): void {
+    function rimuoviLibro(Isbn $isbn): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
             throw new ErroreInternoDatabaseException();
@@ -529,7 +529,7 @@
      * @param $id_sede l'ID della sede della copia
      * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
      */
-    function aggiungiCopia(string $isbn, string $id_sede): void {
+    function aggiungiCopia(Isbn $isbn, string $id_sede): void {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
             throw new ErroreInternoDatabaseException();
@@ -616,12 +616,12 @@
      * Restituisce tutte le copie disponibili di un tale libro. Se sede != null la
      * ricerca viene ristretta alla sede specificata.
      *
-     * @param libro l'id del libro di cui si sta cercando una copia disponibile
+     * @param libro l'isbn del libro di cui si sta cercando una copia disponibile
      * @param id_sede l'id della sede a cui si restringe la ricerca (se != NULL)
      * @return l'id della copia disponibile se esiste
      * @throws CopiaNonDisponibileException se non esiste una copia disponibile
      */
-    function getCopiaDisponibile(string $libro, string $id_sede): string {
+    function getCopiaDisponibile(Isbn $libro, ?string $id_sede): string {
         $conn = pg_connect(CONNECTION_STRING);
         if (!$conn)
             throw new ErroreInternoDatabaseException();

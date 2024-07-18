@@ -634,7 +634,7 @@
         if (!$result)
             throw new ErroreInternoDatabaseException();
 
-        $copia = pg_fetch_array($result);
+        [$copia] = pg_fetch_array($result);
         if (is_null($copia))
             throw new CopiaNonDisponibileException();
 

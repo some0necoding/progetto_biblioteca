@@ -1176,7 +1176,7 @@ BEGIN
     SET isDisponibile = true
     WHERE copia.id = OLD.copia;
 
-    IF count(*) = 1 -- non ci sono altre copie disponibili per quel libro
+    IF count(*) = 1 -- non c'erano altre copie disponibili per quel libro
         FROM biblioteca.copia
         WHERE copia.libro = libroAssociato AND
               copia.isDisponibile

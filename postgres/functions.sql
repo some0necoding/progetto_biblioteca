@@ -172,7 +172,7 @@ DECLARE
     libro biblioteca.libro.isbn%TYPE;
     autore biblioteca.autore.id%TYPE;
 BEGIN
-    SELECT libro.isbn
+    PERFORM libro.isbn
     FROM biblioteca.libro
     WHERE libro.isbn = aggiungiLibro.isbn;
 
@@ -718,7 +718,7 @@ AS $$
 DECLARE
     codice_fiscale biblioteca.lettore.codice_fiscale%TYPE;
 BEGIN
-    SELECT lettore.codice_fiscale INTO codice_fiscale
+    PERFORM lettore.codice_fiscale
     FROM biblioteca.lettore
     WHERE lettore.codice_fiscale = aggiungiLettore.codice_fiscale OR
           lettore.email = aggiungiLettore.email;
@@ -804,7 +804,7 @@ AS $$
 DECLARE
     codice_fiscale biblioteca.lettore.codice_fiscale%TYPE;
 BEGIN
-    SELECT lettore.codice_fiscale INTO codice_fiscale
+    PERFORM lettore.codice_fiscale
     FROM biblioteca.lettore
     WHERE lettore.email = setLettoreEmail.email;
 

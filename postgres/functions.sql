@@ -375,7 +375,8 @@ RETURNS SETOF biblioteca.copia
 AS $$
 BEGIN
     RETURN QUERY SELECT *
-                 FROM biblioteca.copia;
+                 FROM biblioteca.copia
+                 ORDER BY copia.id;
     RETURN;
 END;
 $$

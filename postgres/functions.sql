@@ -243,7 +243,7 @@ CREATE OR REPLACE FUNCTION biblioteca.getLibriBySede(sede biblioteca.sede.id%TYP
 RETURNS SETOF biblioteca.libro
 AS $$
 BEGIN
-    RETURN QUERY SELECT DISTINCT libro.isbn, libro.titolo, libro.trama, libro.casa_editrice
+    RETURN QUERY SELECT DISTINCT libro.isbn, libro.titolo, libro.trama, libro.casa_editrice, libro.isdisponibile
                  FROM biblioteca.copia
                  JOIN biblioteca.libro ON copia.libro = libro.isbn
                  WHERE copia.sede = getLibriBySede.sede

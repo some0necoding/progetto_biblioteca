@@ -21,6 +21,7 @@
     <tr>
       <th scope="col">isbn</th>
       <th scope="col">titolo</th>
+      <th scope="col">autori</th>
       <th scope="col">trama</th>
       <th scope="col">casa editrice</th>
       <th scope="col"></th>
@@ -29,8 +30,24 @@
   <tbody>
     <?php foreach ($libri as $libro): ?>
       <tr>
-        <th scope='row'><?= $libro['isbn'] ?></th>
+        <td scope='row'><?= $libro['isbn'] ?></td>
         <td><?= $libro['titolo'] ?></td>
+        <?php
+          try {
+            $isbn = new Isbn($libro['isbn']);
+            $autori = getAutoriByIsbn($isbn);
+            $listaAutori = "";
+            foreach ($autori as $autore) {
+              $listaAutori .= $autore['nome'] . ' ' . $autore['cognome'] . ', '; 
+            }
+            $listaAutori = rtrim($listaAutori, ", ");
+          } catch (InvalidIsbnException $e) {
+            // if this happens, the database is broken
+          } catch (ErroreInternoDatabaseException $e) {
+            $listaAutori = "Non disponibili";
+          }
+        ?>
+        <td><?= $listaAutori ?></td>
         <td><?= $libro['trama'] ?></td>
         <td><?= $libro['casa_editrice'] ?></td>
         <td>

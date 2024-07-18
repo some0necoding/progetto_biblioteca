@@ -34,6 +34,7 @@ CREATE TABLE biblioteca.libro (
  - `aggiungiLibro(isbn, titolo, trama, casa editrice, autori[])`
  - `getLibri()`
  - `getLibroByIsbn(isbn)`
+ - `getLibriBySede(sede)`
  - `rimuoviLibro(isbn)`
 
 ## Sede
@@ -67,7 +68,7 @@ CREATE TABLE biblioteca.copia (
  - `aggiungiCopia(isbn, sede)`
  - `getCopie()`
  - `getCopiaById(id)`
- - `getCopieBySede(sede)`
+ - `getCopiaDisponibile(isbn, sede)`
  - `setSede(id, sede)`
  - `rimuoviCopia(id)`
 

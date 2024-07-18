@@ -76,6 +76,8 @@ CREATE TABLE biblioteca.copia (
  - `aggiornaSede_AI`: incrementa il numero di copie e (se necessario) di libri gestiti dalla sede.
  - `aggiornaSede_AD`: decrementa il numero di copie e (se necessario) di libri gestiti dalla sede.
  - `aggiornaSede_AU`: decrementa e incrementa il numero di copie e (se necessario) di libri gestiti dalle sedi.
+ - `aggiornaDisponibilitàLibro_AI`: ripristina la disponibilità (se necessario) del libro associato alla copia
+ - `aggiornaDisponibilitàLibro_AD`: revoca la disponibilità (se necessario) del libro associato alla copia
 
 ## Lettore
 ```

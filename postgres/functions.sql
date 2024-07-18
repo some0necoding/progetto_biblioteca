@@ -624,6 +624,76 @@ AFTER UPDATE ON biblioteca.copia
 FOR EACH ROW
 EXECUTE FUNCTION biblioteca.aggiornaSede_AU();
 
+-- Trigger Function. Se necessario revoca la disponibilità del libro associato
+-- alla copia aggiunta.
+--
+-- @return NULL
+CREATE OR REPLACE FUNCTION biblioteca.aggiornaDisponibilitàLibro_AI()
+RETURNS trigger
+AS $$
+DECLARE
+    libroAssociato biblioteca.copia.libro%TYPE;
+BEGIN
+    SELECT copia.libro INTO libroAssociato
+    FROM biblioteca.copia
+    WHERE copia.id = NEW.id;
+
+    IF count(*) = 1 -- la copia è l'unica disponibile per quel libro
+        FROM biblioteca.copia
+        WHERE copia.libro = libroAssociato AND
+              copia.isDisponibile
+    THEN
+        UPDATE biblioteca.libro
+        SET isDisponibile = true
+        WHERE libro.isbn = libroAssociato;
+    END IF;
+
+    RETURN NULL;
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Trigger. Se necessario revoca la disponibilità del libro associato alla copia.
+CREATE OR REPLACE TRIGGER aggiornaDisponibilitàLibro_AI
+AFTER INSERT ON biblioteca.copia
+FOR EACH ROW
+EXECUTE FUNCTION biblioteca.aggiornaDisponibilitàLibro_AI();
+
+-- Trigger Function. Se necessario ripristina la disponibilità del libro associato
+-- alla copia rimossa.
+--
+-- @return NULL
+CREATE OR REPLACE FUNCTION biblioteca.aggiornaDisponibilitàLibro_AD()
+RETURNS trigger
+AS $$
+DECLARE
+    libroAssociato biblioteca.copia.libro%TYPE;
+BEGIN
+    SELECT copia.libro INTO libroAssociato
+    FROM biblioteca.copia
+    WHERE copia.id = OLD.id;
+
+    IF count(*) = 0 -- la copia era l'unica disponibile per quel libro
+        FROM biblioteca.copia
+        WHERE copia.libro = libroAssociato AND
+              copia.isDisponibile
+    THEN
+        UPDATE biblioteca.libro
+        SET isDisponibile = false
+        WHERE libro.isbn = libroAssociato;
+    END IF;
+
+    RETURN NULL;
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Trigger. Se necessario ripristina la disponibilità del libro associato alla copia.
+CREATE OR REPLACE TRIGGER aggiornaDisponibilitàLibro_AD
+AFTER DELETE ON biblioteca.copia
+FOR EACH ROW
+EXECUTE FUNCTION biblioteca.aggiornaDisponibilitàLibro_AD();
+
 -- LETTORE --
 
 -- Aggiunge un lettore al database e ne restituisce l'id. Se esiste già un lettore

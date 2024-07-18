@@ -48,6 +48,8 @@
             {
                 redirect_to('login.php');
             }
+
+            unset($inputs);
         } catch (ErroreInternoDatabaseException $e) {
             redirect_to('internal_error.php');
         }

@@ -86,6 +86,23 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- Restituisce gli autori di un dato libro.
+--
+-- @param isbn l'isbn del libro
+-- @return tabella di autori
+CREATE OR REPLACE FUNCTION biblioteca.getAutoriByIsbn(isbn biblioteca.libro.isbn%TYPE)
+RETURNS SETOF biblioteca.autore
+AS $$
+BEGIN
+    RETURN QUERY SELECT autore.id, autore.nome, autore.cognome, autore.data_di_nascita, autore.data_di_morte, autore.biografia
+                 FROM biblioteca.scritto
+                 JOIN biblioteca.autore ON scritto.autore = autore.id
+                 WHERE scritto.libro = getAutoriByIsbn.isbn;
+    RETURN;
+END;
+$$
+LANGUAGE plpgsql;
+
 -- Aggiunge la data di morte a un autore
 --
 -- @param id l'id dell'autore

@@ -16,6 +16,7 @@ CREATE TABLE biblioteca.autore (
  - `aggiungiAutore(nome, cognome, data di nascita, data di morte, biografia)`
  - `getAutori()`
  - `getAutoreById(id)`
+ - `getAutoriByIsbn(isbn)`
  - `setAutoreDataMorte(id, dataMorte)`
  - `rimuoviAutore(id)`
 

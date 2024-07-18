@@ -111,6 +111,37 @@
     }
 
     /**
+     * Restituisce gli autori di un dato libro.
+     *
+     * @param $isbn l'ISBN del libro
+     * @return un array di array associativi contenenti i dati degli autori
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
+    function getAutoriByIsbn(Isbn $isbn): array {
+        $conn = pg_connect(CONNECTION_STRING);
+        if (!$conn)
+            throw new ErroreInternoDatabaseException();
+
+        $query = "SELECT * FROM biblioteca.getAutoriByIsbn($1)";
+        if (!pg_prepare($conn, "get_autori_by_isbn", $query))
+            throw new ErroreInternoDatabaseException();
+
+        $result = pg_execute($conn, "get_autori_by_isbn", array($isbn));
+        if (!$result)
+            throw new ErroreInternoDatabaseException();
+
+        $autori = pg_fetch_all($result);
+
+        if (!pg_free_result($result))
+            throw new ErroreInternoDatabaseException();
+
+        if (!pg_close($conn))
+            throw new ErroreInternoDatabaseException();
+
+        return $autori;
+    }
+
+    /**
      * Imposta la data di morte di un autore.
      *
      * @param $id_autore l'ID dell'autore

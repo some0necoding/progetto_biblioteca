@@ -433,12 +433,12 @@ BEGIN
         SELECT copia.id INTO copiaTrovata
         FROM biblioteca.copia
         WHERE copia.sede = getCopiaDisponibile.sede AND
-              copia.libro = getCopiaDisponibile.isbn AND
+              copia.libro = getCopiaDisponibile.libro AND
               copia.isDisponibile;
     ELSE
         SELECT copia.id INTO copiaTrovata
         FROM biblioteca.copia
-        WHERE copia.libro = getCopiaDisponibile.isbn AND
+        WHERE copia.libro = getCopiaDisponibile.libro AND
               copia.isDisponibile;
     END IF;
 
@@ -849,22 +849,24 @@ BEGIN
     CASE
         WHEN lettore.ritardi >= 5
             FROM biblioteca.lettore
-            WHERE lettore.codice_fiscale = richiediPrestito.codice_fiscale
+            WHERE lettore.codice_fiscale = richiediPrestito.lettore
         THEN
             RETURN 'TROPPE_CONSEGNE_IN_RITARDO';
         WHEN lettore.prestiti_in_corso >= max_prestiti
             FROM biblioteca.lettore
-            WHERE lettore.codice_fiscale = richiediPrestito.codice_fiscale
+            WHERE lettore.codice_fiscale = richiediPrestito.lettore
         THEN
             RETURN 'TROPPI_PRESTITI_IN_CORSO';
         WHEN NOT copia.isDisponibile
             FROM biblioteca.copia
-            WHERE copia.copia = richiediPrestito.copia
+            WHERE copia.id = richiediPrestito.copia
         THEN
             RETURN 'COPIA_NON_DISPONIBILE';
+        ELSE
+            -- do nothing
     END CASE;
 
-    INSERT INTO biblioteca.prestito
+    INSERT INTO biblioteca.prestito (copia, lettore)
     VALUES (
         copia,
         lettore
@@ -946,7 +948,7 @@ BEGIN
 
     UPDATE biblioteca.prestito
     SET scadenza = prestito.scadenza + giorniDiProroga
-    WHERE prestito.copia = copia;
+    WHERE prestito.copia = prorogaPrestito.copia;
 
     RETURN 'NESSUN_ERRORE';
 END;

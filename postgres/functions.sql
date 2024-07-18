@@ -24,6 +24,7 @@ CREATE VIEW biblioteca.ritardi AS (
     JOIN biblioteca.sede    ON copia.sede = sede.id
     JOIN biblioteca.lettore ON prestito.lettore = lettore.codice_fiscale
     WHERE prestito.scadenza < current_date
+    ORDER BY prestito.scadenza
 );
 
 -- AUTORE --
@@ -63,7 +64,8 @@ RETURNS SETOF biblioteca.autore
 AS $$
 BEGIN
     RETURN QUERY SELECT *
-                 FROM biblioteca.autore;
+                 FROM biblioteca.autore
+                 ORDER BY autore.id;
     RETURN;
 END;
 $$
@@ -97,7 +99,8 @@ BEGIN
     RETURN QUERY SELECT autore.id, autore.nome, autore.cognome, autore.data_di_nascita, autore.data_di_morte, autore.biografia
                  FROM biblioteca.scritto
                  JOIN biblioteca.autore ON scritto.autore = autore.id
-                 WHERE scritto.libro = getAutoriByIsbn.isbn;
+                 WHERE scritto.libro = getAutoriByIsbn.isbn
+                 ORDER BY autore.id;
     RETURN;
 END;
 $$
@@ -207,7 +210,8 @@ RETURNS SETOF biblioteca.libro
 AS $$
 BEGIN
     RETURN QUERY SELECT *
-                 FROM biblioteca.libro;
+                 FROM biblioteca.libro
+                 ORDER BY libro.isbn;
     RETURN;
 END;
 $$
@@ -242,7 +246,8 @@ BEGIN
     RETURN QUERY SELECT DISTINCT libro.isbn, libro.titolo, libro.trama, libro.casa_editrice
                  FROM biblioteca.copia
                  JOIN biblioteca.libro ON copia.libro = libro.isbn
-                 WHERE copia.sede = getCopieBySede.sede;
+                 WHERE copia.sede = getLibriBySede.sede
+                 ORDER BY libro.isbn;
     RETURN;
 END;
 $$
@@ -300,7 +305,8 @@ RETURNS SETOF biblioteca.sede
 AS $$
 BEGIN
     RETURN QUERY SELECT *
-                 FROM biblioteca.sede;
+                 FROM biblioteca.sede
+                 ORDER BY sede.id;
     RETURN;
 END;
 $$
@@ -674,7 +680,8 @@ RETURNS SETOF biblioteca.lettore
 AS $$
 BEGIN
     RETURN QUERY SELECT *
-                 FROM biblioteca.lettore;
+                 FROM biblioteca.lettore
+                 ORDER BY lettore.codice_fiscale;
     RETURN;
 END;
 $$
@@ -885,7 +892,8 @@ RETURNS SETOF biblioteca.prestito
 AS $$
 BEGIN
     RETURN QUERY SELECT *
-                 FROM biblioteca.prestito;
+                 FROM biblioteca.prestito
+                 ORDER BY prestito.scadenza;
     RETURN;
 END;
 $$
@@ -1159,7 +1167,8 @@ RETURNS SETOF biblioteca.bibliotecario
 AS $$
 BEGIN
     RETURN QUERY SELECT *
-                 FROM biblioteca.bibliotecario;
+                 FROM biblioteca.bibliotecario
+                 ORDER BY bibliotecario.id;
     RETURN;
 END;
 $$

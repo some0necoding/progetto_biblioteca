@@ -178,24 +178,24 @@ BEGIN
 
     IF FOUND THEN
         RETURN 'ISBN_GIÀ_ESISTENTE';
-    ELSE
-        INSERT INTO biblioteca.libro (isbn, titolo, trama, casa_editrice)
-        VALUES (
-            aggiungiLibro.isbn,
-            aggiungiLibro.titolo,
-            aggiungiLibro.trama,
-            aggiungiLibro.casa_editrice
-        ) RETURNING libro.isbn INTO libro;
-
-        FOREACH autore IN ARRAY aggiungiLibro.autori
-        LOOP
-            INSERT INTO biblioteca.scritto
-            VALUES (
-                autore,
-                libro
-            );
-        END LOOP;
     END IF;
+
+    INSERT INTO biblioteca.libro (isbn, titolo, trama, casa_editrice)
+    VALUES (
+        aggiungiLibro.isbn,
+        aggiungiLibro.titolo,
+        aggiungiLibro.trama,
+        aggiungiLibro.casa_editrice
+    ) RETURNING libro.isbn INTO libro;
+
+    FOREACH autore IN ARRAY aggiungiLibro.autori
+    LOOP
+        INSERT INTO biblioteca.scritto
+        VALUES (
+            autore,
+            libro
+        );
+    END LOOP;
 
     RETURN 'NESSUN_ERRORE';
 END;

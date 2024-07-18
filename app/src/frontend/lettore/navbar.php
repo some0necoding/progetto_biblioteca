@@ -12,6 +12,9 @@
         <li class="nav-item">
           <a class="nav-link <?= $active == 'libri' ? 'active' : '' ?>" aria-current="page" href="<?= $page ?>?tab=libri">Libri</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link <?= $active == 'prestiti' ? 'active' : '' ?>" aria-current="page" href="<?= $page ?>?tab=prestiti">Prestiti</a>
+        </li>
       </ul>
       <div class="dropdown">
         <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

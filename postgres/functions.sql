@@ -1060,7 +1060,7 @@ BEGIN
     SET isDisponibile = false
     WHERE copia.id = NEW.copia;
 
-    IF count(*) = 1 -- la copia è l'unica disponibile per quel libro
+    IF count(*) = 0 -- la copia è l'unica disponibile per quel libro
         FROM biblioteca.copia
         WHERE copia.libro = libroAssociato AND
               copia.isDisponibile
@@ -1098,7 +1098,7 @@ BEGIN
     SET isDisponibile = true
     WHERE copia.id = OLD.copia;
 
-    IF count(*) = 0 -- non ci sono altre copie disponibili per quel libro
+    IF count(*) = 1 -- non ci sono altre copie disponibili per quel libro
         FROM biblioteca.copia
         WHERE copia.libro = libroAssociato AND
               copia.isDisponibile

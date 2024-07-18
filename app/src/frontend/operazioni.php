@@ -54,7 +54,7 @@
         TipoOperazione::ELIMINA_ACCOUNT_LETTORE->value       => 'EliminaAccountLettore',
         TipoOperazione::RICHIEDI_PRESTITO->value             => 'RichiediPrestito',
         TipoOperazione::RESTITUISCI_PRESTITO->value          => 'RestituisciPrestito',
-        TipoOperazione::PROROGA_PRESTITO->value              => 'Proroga',
+        TipoOperazione::PROROGA_PRESTITO->value              => 'ProrogaPrestito',
         TipoOperazione::LOGIN->value                         => 'Login',
         TipoOperazione::LOGOUT->value                        => 'Logout'
     ];
@@ -1022,7 +1022,7 @@
          */
         public function esegui(): array {
             if (!isset($this->inputs['sede']) || empty($this->inputs['sede']))
-                $this->errors['sede'] = null;
+                $this->inputs['sede'] = null;
 
             try {
                 if (!isset($this->inputs['libro']) || empty($this->inputs['libro']))

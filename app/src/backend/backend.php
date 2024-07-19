@@ -585,8 +585,8 @@
      * Restituisce tutte le copie disponibili di un tale libro. Se sede != null la
      * ricerca viene ristretta alla sede specificata.
      *
-     * @param libro l'isbn del libro di cui si sta cercando una copia disponibile
-     * @param id_sede l'id della sede a cui si restringe la ricerca (se != NULL)
+     * @param $libro l'isbn del libro di cui si sta cercando una copia disponibile
+     * @param $id_sede l'id della sede a cui si restringe la ricerca (se != NULL)
      * @return l'id della copia disponibile se esiste
      * @throws CopiaNonDisponibileException se non esiste una copia disponibile
      */

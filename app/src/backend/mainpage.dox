@@ -1,0 +1,12 @@
+/** @mainpage Biblioteca
+ *
+ * Documentazione tecnica del backend. <br>
+ * Tutte le funzioni implementate dal database in PL/pgSQL vengono wrappate da altrettante funzioni in php.
+ *
+ * I file sono organizzati come segue:
+ * <ul>
+ *  <li>backend.php - contiene tutte le funzioni del backend: sia quelle del database (wrappate in php), sia quelle implementate direttamente in php</li>
+ *  <li>exceptions.php - contiene tutte le exceptions che il database può lanciare, insieme ad alcune esterne al database</li>
+ *  <li>objects.php - contiene le astrazioni necessarie a gestire alcuni datatype che richiedevano qualche vincolo</li>
+ * </ul>
+ */

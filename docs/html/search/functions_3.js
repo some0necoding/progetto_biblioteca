@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['getautorebyid_0',['getAutoreById',['../backend_8php.html#a1b71646aff13b7ca8ad56942ab1b51a8',1,'backend.php']]],
+  ['getautori_1',['getAutori',['../backend_8php.html#a2bc57f19de9db9cf9e07be6481a59791',1,'backend.php']]],
+  ['getautoribyisbn_2',['getAutoriByIsbn',['../backend_8php.html#ada828f599692d7e720997c7d621db518',1,'backend.php']]],
+  ['getbibliotecari_3',['getBibliotecari',['../backend_8php.html#a6d25ae5c71dd83d55516f1191e768b9e',1,'backend.php']]],
+  ['getbibliotecariobyemail_4',['getBibliotecarioByEmail',['../backend_8php.html#a68692b84059942917ffbbc6aceee983b',1,'backend.php']]],
+  ['getbibliotecariobyid_5',['getBibliotecarioById',['../backend_8php.html#ad04dd45444a92d7e71e7798c0fe0cf20',1,'backend.php']]],
+  ['getcopiabyid_6',['getCopiaById',['../backend_8php.html#aa7fdd4e824b8772ab645ae7a6a916bf3',1,'backend.php']]],
+  ['getcopiadisponibile_7',['getCopiaDisponibile',['../backend_8php.html#a0fc893bd92152f8c055cc282d08de38c',1,'backend.php']]],
+  ['getcopie_8',['getCopie',['../backend_8php.html#afdfe3dea3d5c980977fd915c62862c70',1,'backend.php']]],
+  ['getisbn_9',['getIsbn',['../classIsbn.html#a8d887e1341bae2167e6b3e9af112705c',1,'Isbn']]],
+  ['getlettorebycodicefiscale_10',['getLettoreByCodiceFiscale',['../backend_8php.html#ac0a7df60e80737bce08894578f647466',1,'backend.php']]],
+  ['getlettorebyemail_11',['getLettoreByEmail',['../backend_8php.html#a7e84aeb8ec0ec1904f6806a42ce51302',1,'backend.php']]],
+  ['getlettori_12',['getLettori',['../backend_8php.html#aca256be1a1d1a67c956dbfa2cbfcaa3a',1,'backend.php']]],
+  ['getlibri_13',['getLibri',['../backend_8php.html#a509bbab5332d10075095270c0583c795',1,'backend.php']]],
+  ['getlibribysede_14',['getLibriBySede',['../backend_8php.html#aa9ed246279ad68d84fd2942ec3d0c0fe',1,'backend.php']]],
+  ['getlibrobyisbn_15',['getLibroByIsbn',['../backend_8php.html#a16538d66f888bffbb10b5787d4d022f8',1,'backend.php']]],
+  ['getprestiti_16',['getPrestiti',['../backend_8php.html#a5adbb676dd082ea7b6e73289074a99c5',1,'backend.php']]],
+  ['getprestitibysede_17',['getPrestitiBySede',['../backend_8php.html#a420bc74b9da3485c36e3c53248e49151',1,'backend.php']]],
+  ['getprestitobycopia_18',['getPrestitoByCopia',['../backend_8php.html#aa51b632a4954b28e0bddee0de9335b61',1,'backend.php']]],
+  ['getsedebyid_19',['getSedeById',['../backend_8php.html#ac2cfee6c464d2702007f056279f56a65',1,'backend.php']]],
+  ['getsedi_20',['getSedi',['../backend_8php.html#ace8cfe5d152224c27d421903ad049fc7',1,'backend.php']]]
+];

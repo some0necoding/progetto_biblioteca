@@ -15,6 +15,16 @@ CREATE TYPE biblioteca.error AS ENUM (
     'BIBLIOTECARIO_GIÀ_REGISTRATO'
 );
 
+-- VIEWS --
+
+CREATE VIEW biblioteca.ritardi AS (
+    SELECT sede.id AS sede, prestito.lettore, prestito.copia
+    FROM biblioteca.prestito
+    JOIN biblioteca.sede ON prestito.copia = sede.id
+    WHERE prestito.scadenza < current_date
+    ORDER BY prestito.scadenza
+);
+
 -- AUTORE --
 
 -- Aggiunge un autore al database e ne restituisce l'id.
@@ -312,6 +322,23 @@ BEGIN
                  FROM biblioteca.sede
                  WHERE sede.id = getSedeById.id;
 
+    RETURN;
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Restituisce i ritardi in corso per una data sede.
+--
+-- @param sede l'id della sede
+-- @return tabella di copie in ritardo con i relativi lettori
+CREATE OR REPLACE FUNCTION biblioteca.getRitardi(sede biblioteca.sede.id%TYPE)
+RETURNS TABLE (lettore biblioteca.lettore.codice_fiscale%TYPE, copia biblioteca.copia.id%TYPE)
+AS $$
+DECLARE
+BEGIN
+    RETURN QUERY SELECT ritardi.lettore, ritardi.copia
+                 FROM biblioteca.ritardi
+                 WHERE ritardi.sede = getRitardi.sede;
     RETURN;
 END;
 $$

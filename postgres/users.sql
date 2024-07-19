@@ -14,8 +14,12 @@ VALUES (
 -- Email: lettore@biblioteca.org
 -- Password: lettore
 --
-INSERT INTO biblioteca.lettore (email, hash)
+INSERT INTO biblioteca.lettore (codice_fiscale, nome, cognome, email, hash, categoria)
 VALUES (
-    'lettore@biblioteca.org',
-    '$2y$10$x0v8KhLiEa/2ZYXCsFG.9enXcjZaJBWsrb/CMZ.d./OpT6t4cWGb6'
+    'MNTMRC03P04I577Y',
+    'Marco',
+    'Montali',
+    'mmontali@gmail.com',
+    '$2y$10$x0v8KhLiEa/2ZYXCsFG.9enXcjZaJBWsrb/CMZ.d./OpT6t4cWGb6',
+    'base'
 );

@@ -43,6 +43,7 @@
                     'errors' => $errors
                 ]);
             }
+
             if ($tipoOperazione === TipoOperazione::ELIMINA_ACCOUNT_LETTORE->value ||
                 $tipoOperazione === TipoOperazione::LOGOUT->value)
             {

@@ -37,7 +37,7 @@
             if (empty($errors))
                 $errors[$tipoOperazione] = [];
 
-            if (!empty($errors)) {
+            if (!empty($errors[$tipoOperazione])) {
                 redirect_with('bibliotecario.php?tab=' . $tab, [
                     'inputs' => $inputs,
                     'errors' => $errors

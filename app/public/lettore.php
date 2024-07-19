@@ -37,7 +37,7 @@
             if (empty($inputs))
                 $inputs[$tipoOperazione] = [];
 
-            if (!empty($errors)) {
+            if (!empty($errors[$tipoOperazione])) {
                 redirect_with('lettore.php?tab=' . $tab, [
                     'inputs' => $inputs,
                     'errors' => $errors

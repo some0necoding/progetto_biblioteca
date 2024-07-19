@@ -1,4 +1,5 @@
 <?php
+
     function view(string $filename, array $data = []): void {
         foreach ($data as $key => $value) {
             $$key = $value;
@@ -40,4 +41,15 @@
         }
         return $data;
     }
+
+    function classificaPerOperazione(array &$array, TipoOperazione $tipoOperazione): void {
+        foreach ($array as $key => $value) {
+            $array[$tipoOperazione->value][$key] = $value;
+            unset($array[$key]);
+        }
+
+        if (empty($array))
+            $array[$tipoOperazione->value] = [];
+    }
+
 ?>

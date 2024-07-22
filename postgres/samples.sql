@@ -1,8 +1,7 @@
 -- AUTORI --
 
-INSERT INTO biblioteca.autore (id, nome, cognome, data_di_nascita, data_di_morte, biografia)
+INSERT INTO biblioteca.autore (nome, cognome, data_di_nascita, data_di_morte, biografia)
 VALUES (
-    1,
     'Ernest',
     'Hemingway',
     '1899-07-21',
@@ -10,9 +9,8 @@ VALUES (
     'Scrittore e giornalista statunitense che fu autore di romanzi e di racconti. Tra i suoi libri più noti si ricorda "Il vecchio e il mare".'
 );
 
-INSERT INTO biblioteca.autore (id, nome, cognome, data_di_nascita, data_di_morte, biografia)
+INSERT INTO biblioteca.autore (nome, cognome, data_di_nascita, data_di_morte, biografia)
 VALUES (
-    2,
     'Karl',
     'Marx',
     '1818-05-05',
@@ -20,9 +18,8 @@ VALUES (
     'Filosofo, economista, storico, sociologo e giornalista tedesco. Padre del socialismo scientifico e del comunismo moderno.'
 );
 
-INSERT INTO biblioteca.autore (id, nome, cognome, data_di_nascita, data_di_morte, biografia)
+INSERT INTO biblioteca.autore (nome, cognome, data_di_nascita, data_di_morte, biografia)
 VALUES (
-    3,
     'Friedrich',
     'Engels',
     '1820-11-28',
@@ -30,18 +27,16 @@ VALUES (
     'Filosofo, economista, sociologo, giornalista e rivoluzionario tedesco. Amico e collaboratore di Karl Marx.'
 );
 
-INSERT INTO biblioteca.autore (id, nome, cognome, data_di_nascita, biografia)
+INSERT INTO biblioteca.autore (nome, cognome, data_di_nascita, biografia)
 VALUES (
-    4,
     'Alessandro',
     'Baricco',
     '1958-01-25',
     'Scrittore, saggista, giornalista e musicologo italiano. Tra le sue opere più note si ricordano "Oceano mare" e "Seta".'
 );
 
-INSERT INTO biblioteca.autore (id, nome, cognome, data_di_nascita, biografia)
+INSERT INTO biblioteca.autore (nome, cognome, data_di_nascita, biografia)
 VALUES (
-    5,
     'Stefano',
     'Benni',
     '1947-08-12',
@@ -84,16 +79,14 @@ SELECT biblioteca.aggiungiLibro(
 
 -- SEDI --
 
-INSERT INTO biblioteca.sede (id, indirizzo, città)
+INSERT INTO biblioteca.sede (indirizzo, città)
 VALUES (
-    1,
     'Via Celoria, 18',
     'Milano'
 );
 
-INSERT INTO biblioteca.sede (id, indirizzo, città)
+INSERT INTO biblioteca.sede (indirizzo, città)
 VALUES (
-    2,
     'Corso di Porta Vittoria, 6',
     'Milano'
 );

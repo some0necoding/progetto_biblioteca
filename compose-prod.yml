@@ -1,0 +1,30 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+      target: prod
+    ports:
+      - "8080:80"
+    networks:
+      - biblioteca-network
+  php-fpm:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      target: prod
+    networks:
+      - biblioteca-network
+  postgres:
+    build:
+      context: .
+      dockerfile: postgres/Dockerfile
+      target: prod
+    environment:
+      POSTGRES_PASSWORD: weakpassword
+      POSTGRES_DB: biblioteca
+    networks:
+      - biblioteca-network
+
+networks:
+  biblioteca-network:

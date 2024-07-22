@@ -3,7 +3,10 @@ networks:
 
 services:
     nginx:
-        image: nginx:latest
+        build:
+            context: .
+            dockerfile: nginx/Dockerfile
+            target: dev
         ports:
             - "3000:80"
         volumes:
@@ -14,7 +17,9 @@ services:
 
     php-fpm:
         build:
-            context: ./app
+            context: .
+            dockerfile: app/Dockerfile
+            target: dev
         volumes:
             - ./app/public:/var/www/html/public
             - ./app/src:/var/www/html/src
@@ -23,7 +28,9 @@ services:
 
     postgres:
         build:
-            context: ./postgres
+            context: .
+            dockerfile: postgres/Dockerfile
+            target: dev
         environment:
             POSTGRES_PASSWORD: weakpassword
             POSTGRES_DB: biblioteca

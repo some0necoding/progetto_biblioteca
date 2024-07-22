@@ -999,8 +999,9 @@ RETURNS biblioteca.error
 AS $$
 BEGIN
     IF count(*) > 0
-        FROM biblioteca.ritardi
-        WHERE ritardi.copia = prorogaPrestito.copia
+        FROM biblioteca.prestito
+        WHERE prestito.copia = prorogaPrestito.copia AND
+              current_date > prestito.scadenza
     THEN
         RETURN 'PRESTITO_IN_RITARDO';
     END IF;

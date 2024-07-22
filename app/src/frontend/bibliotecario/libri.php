@@ -35,10 +35,10 @@
         <?php
           try {
             $isbn = new Isbn($libro['isbn']);
-            $autori = getAutoriByIsbn($isbn);
+            $autoriLibro = getAutoriByIsbn($isbn);
             $listaAutori = "";
-            foreach ($autori as $autore) {
-              $listaAutori .= $autore['nome'] . ' ' . $autore['cognome'] . ', '; 
+            foreach ($autoriLibro as $autoreLibro) {
+              $listaAutori .= $autoreLibro['nome'] . ' ' . $autoreLibro['cognome'] . ', '; 
             }
             $listaAutori = rtrim($listaAutori, ", ");
           } catch (InvalidIsbnException $e) {

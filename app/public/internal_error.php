@@ -1,5 +1,5 @@
 <?php 
-    include 'utils.php';
+    include '../src/frontend/utils.php';
 ?>
 <?php view('header', ['title' => 'Server Error']) ?>
 <div class="container">

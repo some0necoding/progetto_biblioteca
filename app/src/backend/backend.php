@@ -459,6 +459,37 @@
     }
 
     /**
+     * Restituisce i ritardi di una sede.
+     *
+     * @param $id_sede l'ID della sede
+     * @return un array di array associativi contenenti i dati dei ritardi
+     * @throws ErroreInternoDatabaseException se si verifica un errore interno al database
+     */
+    function getRitardi(string $id_sede): array {
+        $conn = pg_connect(CONNECTION_STRING);
+        if (!$conn)
+            throw new ErroreInternoDatabaseException();
+
+        $query = "SELECT * FROM biblioteca.getRitardi($1)";
+        if (!pg_prepare($conn, "get_ritardi", $query))
+            throw new ErroreInternoDatabaseException();
+
+        $result = pg_execute($conn, "get_ritardi", array($id_sede));
+        if (!$result)
+            throw new ErroreInternoDatabaseException();
+
+        $ritardi = pg_fetch_all($result);
+
+        if (!pg_free_result($result))
+            throw new ErroreInternoDatabaseException();
+
+        if (!pg_close($conn))
+            throw new ErroreInternoDatabaseException();
+
+        return $ritardi;
+    }
+
+    /**
      * Rimuove una sede dal database.
      *
      * @param $id_sede l'ID della sede

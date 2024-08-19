@@ -1118,8 +1118,12 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiornaDisponibilità_AI()
 RETURNS trigger
 AS $$
 DECLARE
-    libroAssociato biblioteca.copia.libro%TYPE := NEW.libro;
+    libroAssociato biblioteca.copia.libro%TYPE;
 BEGIN
+    SELECT copia.libro INTO libroAssociato
+    FROM biblioteca.copia
+    WHERE copia.id = NEW.copia;
+
     UPDATE biblioteca.copia
     SET isDisponibile = false
     WHERE copia.id = NEW.copia;
@@ -1152,8 +1156,12 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiornaDisponibilità_AD()
 RETURNS trigger
 AS $$
 DECLARE
-    libroAssociato biblioteca.copia.libro%TYPE := NEW.libro;
+    libroAssociato biblioteca.copia.libro%TYPE;
 BEGIN
+    SELECT copia.libro INTO libroAssociato
+    FROM biblioteca.copia
+    WHERE copia.id = OLD.copia;
+
     UPDATE biblioteca.copia
     SET isDisponibile = true
     WHERE copia.id = OLD.copia;

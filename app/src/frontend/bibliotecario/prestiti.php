@@ -3,12 +3,25 @@
     
     $redirectUrl = 'bibliotecario.php?tab=prestiti';
 
+    $sedeCorrente = $_GET['sede'] ?? 0;
+
     try {
-        $prestiti = getPrestiti();
+        if ($sedeCorrente == 0)
+            $prestiti = getPrestiti();
+        else
+            $prestiti = getPrestitiBySede($sedeCorrente);
+        $sedi = getSedi();
     } catch (ErroreInternoDatabaseException $e) {
         redirect_to('internal_error.php');
     }
 ?>
+
+<select class="form-select mb-4" id="sede" name="sede" onchange="window.location = '<?= $redirectUrl . "&sede=" ?>' + this.selectedOptions[0].value;">
+  <option value="0" <?= $sedeCorrente == 0 ? 'selected' : '' ?>>Tutte le sedi</option>
+  <?php foreach($sedi as $sede): ?>
+  <option value="<?= $sede['id'] ?>" <?= $sedeCorrente == $sede['id'] ? 'selected' : '' ?>><?= $sede['indirizzo'] . ', ' . $sede['città'] ?></option>
+  <?php endforeach; ?>
+</select>
 
 <?php if (empty($prestiti)): ?>
 <div class="alert alert-warning text-center" role="alert">

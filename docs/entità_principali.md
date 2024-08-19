@@ -52,7 +52,6 @@ CREATE TABLE biblioteca.sede (
  - `aggiungiSede(indirizzo, città)`
  - `getSedi()`
  - `getSedeById(id)`
- - `getRitardi(id)`: genera un report dei ritardi
  - `rimuoviSede(id)`
 
 ## Copia
@@ -117,6 +116,7 @@ CREATE TABLE biblioteca.prestito (
  - `richiediPrestito(copia, lettore)`
  - `getPrestiti()`
  - `getPrestitoByCopia(copia)`
+ - `getPrestitiBySede(sede)`
  - `restituisciPrestito(copia)`
  - `prorogaPrestito(copia, giorniDiProroga)`
 

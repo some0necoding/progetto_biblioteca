@@ -23,6 +23,7 @@
   <option value="<?= $sede['id'] ?>" <?= $sedeCorrente == $sede['id'] ? 'selected' : '' ?>><?= $sede['indirizzo'] . ', ' . $sede['città'] ?></option>
   <?php endforeach; ?>
 </select>
+
 <?php
   $richiediErrors = $errors[TipoOperazione::RICHIEDI_PRESTITO->value] ?? [];
   $richiediErrors = array_filter($richiediErrors, fn($error) => !is_null($error) && $error !== '');
@@ -30,6 +31,12 @@
 <div class="alert alert-warning mt-4 <?= empty($richiediErrors) ? 'd-none' : '' ?>" role="alert">
   <?= join('<br>', $richiediErrors) ?>
 </div>
+
+<?php if (empty($libri)): ?>
+<div class="alert alert-warning text-center" role="alert">
+  Non ci sono libri
+</div>
+<?php else: ?>
 <div class="row row-cols-5 mt-4 g-2" style="margin: auto">
   <?php foreach($libri as $libro): ?>
     <?php $isdisponibile = $libro['isdisponibile'] == "t"; ?>
@@ -73,3 +80,4 @@
     </div>
   <?php endforeach; ?>
 </div>
+<?php endif; ?>

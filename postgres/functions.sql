@@ -630,12 +630,8 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiornaDisponibilitàLibro_AI()
 RETURNS trigger
 AS $$
 DECLARE
-    libroAssociato biblioteca.copia.libro%TYPE;
+    libroAssociato biblioteca.copia.libro%TYPE := NEW.libro;
 BEGIN
-    SELECT copia.libro INTO libroAssociato
-    FROM biblioteca.copia
-    WHERE copia.id = NEW.id;
-
     IF count(*) = 1 -- la copia è l'unica disponibile per quel libro
         FROM biblioteca.copia
         WHERE copia.libro = libroAssociato AND
@@ -665,12 +661,8 @@ CREATE OR REPLACE FUNCTION biblioteca.aggiornaDisponibilitàLibro_AD()
 RETURNS trigger
 AS $$
 DECLARE
-    libroAssociato biblioteca.copia.libro%TYPE;
+    libroAssociato biblioteca.copia.libro%TYPE := OLD.libro;
 BEGIN
-    SELECT copia.libro INTO libroAssociato
-    FROM biblioteca.copia
-    WHERE copia.id = OLD.id;
-
     IF count(*) = 0 -- la copia era l'unica disponibile per quel libro
         FROM biblioteca.copia
         WHERE copia.libro = libroAssociato AND

@@ -22,7 +22,7 @@ CREATE TABLE biblioteca.libro (
     titolo VARCHAR(128) NOT NULL,
     trama text NOT NULL,
     casa_editrice VARCHAR(128) NOT NULL,
-    isDisponibile BOOLEAN NOT NULL DEFAULT true
+    isDisponibile BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE biblioteca.scritto (

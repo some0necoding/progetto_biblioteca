@@ -23,6 +23,12 @@
   <option value="<?= $sede['id'] ?>" <?= $sedeCorrente == $sede['id'] ? 'selected' : '' ?>><?= $sede['indirizzo'] . ', ' . $sede['città'] ?></option>
   <?php endforeach; ?>
 </select>
+
+<?php if (empty($libri)): ?>
+<div class="alert alert-warning text-center" role="alert">
+  Non ci sono libri
+</div>
+<?php else: ?>
 <div class="row row-cols-5 mt-4 g-2" style="margin: auto">
   <?php foreach($libri as $libro): ?>
     <?php $isdisponibile = $libro['isdisponibile'] == "t"; ?>
@@ -66,3 +72,4 @@
     </div>
   <?php endforeach; ?>
 </div>
+<?php endif; ?>

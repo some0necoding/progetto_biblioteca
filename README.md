@@ -2,20 +2,15 @@
 
 Implementazione del database di una biblioteca e degli strumenti necessari per accedervi.
 
-<h1 align="center">
-    <video autoplay muted preload loop width="500" src="https://github.com/some0necoding/pwman/blob/main/docs/tecnica/prova_di_funzionamento.webm">
-    </video>
-</h1>
-
 # Struttura del database
 ##### Schema ER
 <h1 align="center">
-    <img width="500" alt="schema ER" src="https://github.com/some0necoding/pwman/blob/main/docs/tecnica/schema_concettuale.svg">
+    <img width="500" alt="schema ER" src="https://github.com/some0necoding/progetto_biblioteca/blob/main/docs/tecnica/schema_concettuale.svg">
 </h1>
 
 ##### Schema ER Ristrutturato e Schema Logico
 <h1 align="center">
-    <img width="500" alt="schema logico" src="https://github.com/some0necoding/pwman/blob/main/docs/tecnica/schema_logico.svg">
+    <img width="500" alt="schema logico" src="https://github.com/some0necoding/progetto_biblioteca/blob/main/docs/tecnica/schema_logico.svg">
 </h1>
 
 ### Struttura del progetto

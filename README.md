@@ -3,12 +3,12 @@
 Implementazione del database di una biblioteca e degli strumenti necessari per accedervi.
 
 # Struttura del database
-##### Schema ER
+### Schema ER
 <h1 align="center">
     <img width="1000" alt="schema ER" src="https://github.com/some0necoding/progetto_biblioteca/blob/main/docs/tecnica/schema_concettuale.svg">
 </h1>
 
-##### Schema ER Ristrutturato e Schema Logico
+### Schema ER Ristrutturato e Schema Logico
 <h1 align="center">
     <img width="1000" alt="schema logico" src="https://github.com/some0necoding/progetto_biblioteca/blob/main/docs/tecnica/schema_logico.svg">
 </h1>
